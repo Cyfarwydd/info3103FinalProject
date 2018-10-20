@@ -1,1 +1,12 @@
-/*hi*/
+DELIMITER //
+DROP PROCEDURE IF EXISTS "deleteList" //
+
+CREATE PROCEDURE deleteList(
+	in lID int
+)
+
+BEGIN
+	DELETE FROM ToDoLists
+		WHERE ListID = lID;
+END//
+DELIMITER ;

@@ -16,7 +16,8 @@ create table if not exists Tasks
 (
 	TaskID int not null auto_increment primary key,
 	ListID int not null,
-	Complete boolean ,
+	Task VARCHAR(50),
+	Complete boolean,
 	FOREIGN KEY(ListID)
 		REFERENCES ToDoLists(ListID) ON DELETE CASCADE
 );
