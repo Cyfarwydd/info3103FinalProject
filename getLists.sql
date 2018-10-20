@@ -1,1 +1,8 @@
-/*hi*/
+DELIMITER //
+DROP PROCEDURE IF EXISTS "getLists" //
+
+CREATE PROCEDURE getLists()
+begin
+	SELECT * FROM ToDoLists;
+end//
+DELIMITER ;

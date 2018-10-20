@@ -1,1 +1,9 @@
-/*hi*/
+DELIMITER //
+DROP PROCEDURE IF EXISTS "getListByID" //
+
+CREATE PROCEDURE getListByID(IN listIDIn INT)
+begin
+	SELECT * FROM ToDoLists
+	WHERE ListID = listIDIn;
+end//
+DELIMITER ;

@@ -1,1 +1,9 @@
-/*hi*/
+DELIMITER //
+DROP PROCEDURE IF EXISTS "getUserByID" //
+
+CREATE PROCEDURE getUserByID(IN userID VARCHAR(16))
+begin
+	SELECT * FROM Users
+	WHERE UserID = userID;
+end//
+DELIMITER ;
