@@ -1,5 +1,5 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS "createUser" //
+DROP PROCEDURE IF EXISTS createUser //
 
 CREATE PROCEDURE createUser( userNameIn VARCHAR(16))
 begin
