@@ -1,9 +1,11 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS "getListByID" //
+DROP PROCEDURE IF EXISTS getListByID //
 
 CREATE PROCEDURE getListByID(IN listIDIn INT)
 begin
-	SELECT * FROM ToDoLists
-	WHERE ListID = listIDIn;
+	SELECT Title FROM ToDoLists
+		WHERE ListID = listIDIn;
+	SELECT * from Tasks
+		where ListID = listIDIn;
 end//
 DELIMITER ;
