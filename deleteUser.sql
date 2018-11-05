@@ -1,7 +1,7 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS "deleteUser"//
+DROP PROCEDURE deleteUser//
 
-CREATE PROCEDURE deleteUser (in usID varchar(16))
+CREATE PROCEDURE deleteUser (in usID varchar(64))
 begin
 
 	DELETE from Users
