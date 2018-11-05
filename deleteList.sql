@@ -1,12 +1,14 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS "deleteList" //
+DROP PROCEDURE deleteList //
 
 CREATE PROCEDURE deleteList(
-	in lID int
+	in lID int,
+	usID varchar(64)
 )
 
 BEGIN
 	DELETE FROM ToDoLists
-		WHERE ListID = lID;
+		WHERE (ListID = lID
+		AND UserID = usID);
 END//
 DELIMITER ;
