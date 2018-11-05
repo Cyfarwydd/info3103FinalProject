@@ -1,8 +1,9 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS "getLists" //
+DROP PROCEDURE getLists //
 
-CREATE PROCEDURE getLists()
+CREATE PROCEDURE getLists(in userID varchar(64))
 begin
-	SELECT * FROM ToDoLists;
+	SELECT * FROM ToDoLists
+		where userID = UserID;
 end//
 DELIMITER ;
