@@ -1,9 +1,9 @@
-create table if not exists Users
+create table Users
 (
 	UserID	VARCHAR(64) not null primary key
 );
 
-create table if not exists ToDoLists
+create table ToDoLists
 (
 	ListID	INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	Title VARCHAR(64),
@@ -12,7 +12,7 @@ create table if not exists ToDoLists
 		REFERENCES Users(UserID) ON DELETE CASCADE
 );
 
-create table if not exists Tasks
+create table Tasks
 (
 	TaskID int not null auto_increment primary key,
 	ListID int not null,
@@ -22,4 +22,8 @@ create table if not exists Tasks
 		REFERENCES ToDoLists(ListID) ON DELETE CASCADE
 );
 
+deleting tables:
 
+drop table Tasks;
+drop table ToDoLists;
+drop table Users;
