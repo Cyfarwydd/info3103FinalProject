@@ -1,10 +1,10 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS "createUser" //
 
-CREATE PROCEDURE createUser(IN userNameIn VARCHAR(16))
+CREATE PROCEDURE createUser( userNameIn VARCHAR(16))
 begin
 	INSERT INTO Users (userID) VALUES
-	(userIDIn);
+	(userNameIn);
 end//
 DELIMITER ;
 	
