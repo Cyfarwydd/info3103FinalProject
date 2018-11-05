@@ -1,9 +1,8 @@
 DELIMITER //
 DROP PROCEDURE getLists //
 
-CREATE PROCEDURE getLists(in userID varchar(64))
+CREATE PROCEDURE getLists(in usID varchar(64))
 begin
-	SELECT * FROM ToDoLists
-		where userID = UserID;
+	select * from ToDoLists where STRCMP(UserID, usID) = 0;
 end//
 DELIMITER ;
