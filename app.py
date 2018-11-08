@@ -59,14 +59,14 @@ class Users(Resource):
 			dbConnection.close()
 		return make_response(jsonify({'users': rows}), 200)
 	def post(self):
-		if not request.json or not 'Name' in request.json:
+		if not request.json or not 'Username' in request.json:
 			abort(401)	#a user is trying to make another user
 		
 		name = request.json['Username'];
 		email = request.json['Email'];
 	
 		try:
-			dbConnectioin = pymysql.connect(settings.DB_HOST,
+			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
 				settings.DB_PASSWD,
 				settings.DB_DATABASE,
@@ -83,7 +83,7 @@ class Users(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-		uri = 'http://'+settings.APP_HOST+":"+str(settings.APP_PORT)
+		uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
 		uri = uri+str(request.url_rule)+'/'+str(row['LAST_INSERT_ID()'])
 		return make_response(jsonify( {"uri" : uri } ), 201)
 	
@@ -98,7 +98,7 @@ class User(Resource):
 				settings.DB_PASSWD,
 				settings.DB_DATABASE,
 				charset='utf8mb4',
-				cursorclass= pymysql.corsors.DictCursor)
+				cursorclass= pymysql.cursors.DictCursor)
 			sql='getUserByID'
 			cursor = dbConnection.cursor()
 			sqlArgs = (userID,)
@@ -164,11 +164,11 @@ class Lists(Resource):
 			cursor.close()
 			dbConnection.close
 		return make_response(jsonify({'lists': rows}), 200)
-	def post(self, userID):
-		if not request.json or not 'List' in request.json:
+	def post(self, userID, listName):
+		if not request.json or not 'listName' in request.json:
 			abort(400)
 
-		listID = request.json['listID'];
+		listName = request.json['listName'];
 		
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
@@ -179,7 +179,7 @@ class Lists(Resource):
 				cursorclass= pymysql.cursors.DictCursor)
 			sql = 'postList'
 			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID)
+			sqlArgs = (userID, listName)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			dbConnection.commit()
