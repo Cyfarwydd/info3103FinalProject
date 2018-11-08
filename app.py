@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, jsonify, abort, request, make_response
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 import pymysql.cursors
 import json
 
@@ -11,6 +11,7 @@ import sys
 cgitb.enable()
 
 import settings #stored in settings.py
+import ssl
 
 app = Flask(__name__, static_url_path='/static')
 api = Api(app)
@@ -247,4 +248,10 @@ class List(Resource):
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
 
 if __name__ == "__main__":
-	app.run(host=settings.APP_HOST, port=settings.APP_PORT, debug=settings.APP_DEBUG)	
+	context = ('cert.pem', 'key.pem')
+	app.run(
+		host=settings.APP_HOST,
+		port=settings.APP_PORT,
+		ssl_context=context,
+		debug=settings.APP_DEBUG
+	)	
