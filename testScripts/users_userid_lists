@@ -12,4 +12,4 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'$title'", "d
 #DELETE, deletes a single list and all items attached to that list
 read -p "Username: " username
 read -p "list-ID " list_id
-curl -i -H "Content-Type: application/json" -X DELETE -d '{"username": "'$username', "list_id": "'$list_id'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<port>/users/<userid>/lists
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"Username": "'$username', "list_id": "'$list_id'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<port>/users/<userid>/lists
