@@ -1,5 +1,5 @@
 delimiter //
-DROP PROCEDURE IF EXISTS "getUsers"//
+DROP PROCEDURE IF EXISTS getUsers//
 
 CREATE PROCEDURE getUsers()
 BEGIN
