@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#DELETE
+read -p "Username: " username
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"username": "'$username'"}' -c cookie-jar http://info3103.cs.unb.ca:<port>/users/<userid>
+
+#GET
+curl -i -H "Content-Type: application/json" -X GET http://info3103.cs.unb.ca:<port>/users/<userid>/lists
+
+#PUT
+#NEED TO FIGURE OUT WHAT PART OF THE USER PROFILE WILL BE SEEN
