@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, abort, request, make_response
+from flask import Flask, jsonify, abort, request, make_response, session
 from flask_restful import Resource, Api, reqparse
+from flask_session import Session
 import pymysql.cursors
 import json
+
+from ldap3 import Server, Connection, ALL
+from ldap3.core.exceptions import *
 
 import cgitb
 import cgi
@@ -14,7 +18,15 @@ import settings #stored in settings.py
 import ssl
 
 app = Flask(__name__, static_url_path='/static')
+
+app.secret_key = settings.SECRET_KEY
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_COOKIE_NAME'] = 'peanutButter'
+app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
+
 api = Api(app)
+
+Session(app)
 
 ##
 #Error handlers
@@ -41,7 +53,60 @@ class Root(Resource):
 		return app.send_static_file('index.html')
 
 api.add_resource(Root,'/')
-
+class SignIn(Resource):
+	def post(self):
+		if not request.json:
+			abort(400)
+		parser = reqparse.RequestParser()
+		try:
+			parser.add_argument('Username', type=str, required=True)
+			parser.add_argument('Password', type=str, required=True)
+			request_params = parser.parse_args()
+		except:
+			abort(400)
+	
+		#if they are logged in...
+		if request_params['Username'] in session:
+			response= {'status': 'success'}
+			responseCode = 200
+		else:
+			try:
+				ldapServer = Server(host=settings.LDAP_HOST)
+				ldapConnection = Connection(ldapServer,
+					raise_exceptions=True,
+					user='uid='+request_params['Username'] + ', ou=People,ou=fcs,o=unb',			
+					password = request_params['Password'])
+				ldapConnection.open()
+				ldapConnection.start_tls()
+				ldapConnection.bind()
+				session['username'] = request_params['Username']
+				response = {'status': 'success'}
+				responseCode = 201
+			except(LDAPException):
+				response = {'status': 'Access denied'}
+				repsonseCode = 403
+			finally:
+				ldapConnection.unbind()
+		return make_response(jsonify(response), responseCode)
+					
+	def get(self):
+		if 'username' in session:
+			response = {'status': 'success'}
+			responseCode = 200
+		else:
+			response = {'status': 'fail'}
+			responseCode = 403
+		return make_response(jsonify(response), responseCode)
+	
+	def delete(self):
+		success = False
+		successCode = 400
+		if 'username' in session:
+			success = True
+			successCode = 200
+			session.clear()
+		return make_response(jsonify({'success': success}), successCode)
+		
 class Users(Resource):
 	def get(self):
 		try:
@@ -263,6 +328,7 @@ class List(Resource):
 
 		return make_response(jsonify(), 200)
 
+api.add_resource(SignIn, '/signin')
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
 
 if __name__ == "__main__":
