@@ -7,11 +7,10 @@ create table Users
 
 create table ToDoLists
 (
-	ListID	INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ListID int unique not null AUTO_INCREMENT PRIMARY KEY,
 	Title VARCHAR(64),
 	UserID int NOT NULL,
-	FOREIGN KEY(UserID)
-		REFERENCES Users(UserID) ON DELETE CASCADE
+	FOREIGN KEY(UserID) REFERENCES Users(UserID) ON DELETE CASCADE
 );
 
 create table Tasks
@@ -20,8 +19,7 @@ create table Tasks
 	ListID int not null,
 	Task VARCHAR(64),
 	Complete boolean,
-	FOREIGN KEY(ListID)
-		REFERENCES ToDoLists(ListID) ON DELETE CASCADE
+	FOREIGN KEY(ListID) REFERENCES ToDoLists(ListID) ON DELETE CASCADE
 );
 
 deleting tables:
