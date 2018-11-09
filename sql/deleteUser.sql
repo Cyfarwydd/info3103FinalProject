@@ -1,5 +1,5 @@
 DELIMITER //
-DROP PROCEDURE deleteUser//
+DROP PROCEDURE IF EXISTS deleteUser//
 
 CREATE PROCEDURE deleteUser (in usID int)
 begin
