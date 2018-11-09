@@ -28,6 +28,10 @@ def not_found(error):
 def not_found(error):
 	return make_response(jsonify( {"status": "File not found" }), 404)
 
+@app.errorhandler(403)
+def not_found(error):
+	return make_response(jsonify( { "status": "Username already being used" } ), 403)
+
 ##
 #static endpoints (for humans)
 ##
@@ -61,10 +65,10 @@ class Users(Resource):
 	def post(self):
 		if not request.json or not 'Username' in request.json:
 			abort(401)	#a user is trying to make another user
-		
+
 		name = request.json['Username'];
 		email = request.json['Email'];
-	
+
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
@@ -72,21 +76,35 @@ class Users(Resource):
 				settings.DB_DATABASE,
 				charset='utf8mb4',
 				cursorclass=pymysql.cursors.DictCursor)
-			sql = 'createUser'
+
+			sql = 'getUserByName'
 			cursor = dbConnection.cursor()
-			sqlArgs = (name, email)
+			sqlArgs = (name,)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
-			dbConnection.commit()
+			if row is not None:
+				return make_response(jsonify( { "status": "Username already being used" } ), 418)
+			else:
+				sql = 'createUser'
+				sqlArgs = (name, email)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				dbConnection.commit()
+				sql = 'getUserByName'
+				cursor = dbConnection.cursor()
+				sqlArgs = (name,)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+
 		except:
 			abort(503)
 		finally:
 			cursor.close()
 			dbConnection.close()
 		uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
-		uri = uri+str(request.url_rule)+'/'+str(row['LAST_INSERT_ID()'])
+		uri = uri+str(request.url_rule)+'/'+str(row["UserID"])
 		return make_response(jsonify( {"uri" : uri } ), 201)
-	
+
 api.add_resource(Users, '/users')
 
 class User(Resource):
@@ -117,7 +135,7 @@ class User(Resource):
 
 	##don't know what to put here yet
 		return
-	
+
 	def delete(self, userID):
 		try:
 			dbConnection = pymysql.connect(
@@ -169,7 +187,7 @@ class Lists(Resource):
 			abort(400)
 
 		listName = request.json['listName'];
-		
+
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
@@ -222,7 +240,7 @@ class List(Resource):
 	def put():
 		##TODO
 		return
-	
+
 	def delete(self, userID, listID):
 		try:
 			dbConnection = pymysql.connect(
@@ -242,7 +260,7 @@ class List(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-		
+
 		return make_response(jsonify(), 200)
 
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
@@ -254,4 +272,4 @@ if __name__ == "__main__":
 		port=settings.APP_PORT,
 		ssl_context=context,
 		debug=settings.APP_DEBUG
-	)	
+	)
