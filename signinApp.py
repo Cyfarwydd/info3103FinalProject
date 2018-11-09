@@ -5,6 +5,7 @@ from flask_restful import reqparse, Resource, Api
 from flask_session import Session
 import json
 from ldap3 import Server, Connection, ALL
+from ldap3.core.exceptions import *
 import settings # Our server and db settings, stored in settings.py
 
 app = Flask(__name__)
@@ -72,7 +73,7 @@ class SignIn(Resource):
 				session['username'] = request_params['username']
 				response = {'status': 'success' }
 				responseCode = 201
-			except (LDAPException, error_message):
+			except (LDAPException):
 				response = {'status': 'Access denied'}
 				responseCode = 403
 			finally:
@@ -121,4 +122,5 @@ api.add_resource(SignIn, '/signin')
 #############################################################################
 # xxxxx= last 5 digits of your studentid. If xxxxx > 65535, subtract 30000
 if __name__ == "__main__":
-   	app.run(host=settings.APP_HOST, port=settings.APP_PORT, debug=settings.APP_DEBUG)
+	context = ('cert.pem', 'key.pem')
+	app.run(host=settings.APP_HOST, port=settings.APP_PORT, ssl_context = context, debug=settings.APP_DEBUG	)
