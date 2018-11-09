@@ -155,7 +155,7 @@ class User(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-		return make_response(jsonify(), 200)
+		return make_response(jsonify({ "status": "Deletion successful" }), 200)
 
 api.add_resource(User, '/users/<string:userID>')
 
