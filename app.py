@@ -28,9 +28,9 @@ api = Api(app)
 
 Session(app)
 
-##
+###############################################################################
 #Error handlers
-##
+#
 
 @app.errorhandler(400)
 def not_found(error):
@@ -44,15 +44,14 @@ def not_found(error):
 def not_found(error):
 	return make_response(jsonify( { "status": "Username already being used" } ), 403)
 
-##
-#static endpoints (for humans)
-##
+###############################################################################
+#			static endpoints (for humans)
+#
 
 class Root(Resource):
 	def get(self):
 		return app.send_static_file('index.html')
 
-api.add_resource(Root,'/')
 class SignIn(Resource):
 	def post(self):
 		if not request.json:
@@ -170,7 +169,6 @@ class Users(Resource):
 		uri = uri+str(request.url_rule)+'/'+str(row["UserID"])
 		return make_response(jsonify( {"uri" : uri } ), 201)
 
-api.add_resource(Users, '/users')
 
 class User(Resource):
 	def get(self, userID):
@@ -222,7 +220,6 @@ class User(Resource):
 			dbConnection.close()
 		return make_response(jsonify({ "status": "Deletion successful" }), 200)
 
-api.add_resource(User, '/users/<string:userID>')
 
 class Lists(Resource):
 	def get(self, userID):
@@ -276,7 +273,6 @@ class Lists(Resource):
 		uri = uri+str(request.url_rule)+'/'+str(row['LAST_INSERT_ID()'])
 		return make_response(jsonify( { "uri": uri } ), 201)
 
-api.add_resource(Lists, '/user/<string:userID>/lists')
 
 class List(Resource):
 	def get(self, userID, listID):
@@ -328,8 +324,20 @@ class List(Resource):
 
 		return make_response(jsonify(), 200)
 
+###############################################################################
+#			Adding resources
+#
+api.add_resource(Root,'/')
 api.add_resource(SignIn, '/signin')
+api.add_resource(Users, '/users')
+api.add_resource(User, '/users/<string:userID>')
+api.add_resource(Lists, '/user/<string:userID>/lists')
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
+
+
+###############################################################################
+#			Starting
+#
 
 if __name__ == "__main__":
 	context = ('cert.pem', 'key.pem')
