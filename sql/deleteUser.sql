@@ -1,11 +1,11 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS deleteUser//
 
-CREATE PROCEDURE deleteUser (in usID int)
+CREATE PROCEDURE deleteUser (in usName varchar(64))
 begin
 
 	DELETE from Users
-		WHERE UserID = usID;
+		WHERE UserName = usName;
 
 end//
 DELIMITER ;
