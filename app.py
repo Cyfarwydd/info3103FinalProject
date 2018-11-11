@@ -83,9 +83,41 @@ class SignIn(Resource):
 				responseCode = 201
 			except(LDAPException):
 				response = {'status': 'Access denied'}
-				repsonseCode = 403
+				responseCode = 403
 			finally:
 				ldapConnection.unbind()
+
+		##THIS ALL WORKS UP ABOVE ^^^^^
+		try:
+			dbConnection = pymysql.connect(
+				settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass=pymysql.cursors.DictCursor)
+			sql = 'getUserByName'
+			sqlArgs = (session['username'],)
+			cursor = dbConnection.cursor()
+			cursor.callproc(sql, sqlArgs)
+			row = cursor.fetchone()
+			if row is None:
+				sql = 'createUser'
+				sqlArgs = (session['username'], session['username']+'@unb.ca')
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
+				
+			sql = 'getUserByName'	
+			sqlArgs = (session['username'],)
+			cursor.callproc(sql, sqlArgs)
+			row = cursor.fetchone()
+		except:
+			response = {'status': 'Fail'}
+			responseCode = 500
+		finally:
+			cursor.close()
+			dbConnection.close()
+		
 		return make_response(jsonify(response), responseCode)
 					
 	def get(self):
@@ -247,9 +279,6 @@ class Lists(Resource):
 	def post(self, userID, listName):
 		if not request.json or not 'listName' in request.json:
 			abort(400)
-
-		listName = request.json['listName'];
-
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
@@ -268,8 +297,7 @@ class Lists(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-
-		uri = 'http://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
 		uri = uri+str(request.url_rule)+'/'+str(row['LAST_INSERT_ID()'])
 		return make_response(jsonify( { "uri": uri } ), 201)
 
@@ -331,7 +359,7 @@ api.add_resource(Root,'/')
 api.add_resource(SignIn, '/signin')
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<string:userID>')
-api.add_resource(Lists, '/user/<string:userID>/lists')
+api.add_resource(Lists, '/users/<string:userID>/lists')
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
 
 
