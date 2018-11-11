@@ -6,9 +6,8 @@ curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca
 
 #POST, creates a new list
 read -p "Title: " title
-read -p "Description: " descr
 read -p "Username:" username
-curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'$title'", "description": "'$descr'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$username/lists
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'$title'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$username/lists
 
 #DELETE, deletes a single list and all items attached to that list
 read -p "Username: " username
