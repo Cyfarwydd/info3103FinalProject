@@ -1,5 +1,5 @@
 DELIMITER //
-DROP PROCEDURE getLists //
+DROP PROCEDURE IF EXISTS getLists //
 
 CREATE PROCEDURE getLists(in usID varchar(64))
 begin
