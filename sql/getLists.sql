@@ -1,8 +1,10 @@
 DELIMITER //
 DROP PROCEDURE getLists //
 
-CREATE PROCEDURE getLists(in usID int)
+CREATE PROCEDURE getLists(in usID varchar(64))
 begin
-	select * from ToDoLists where UserID = usID;
+	declare id int default 0;
+	select userID from Users where UserName = usID into id;
+	select * from ToDoLists where UserID = id;
 end//
 DELIMITER ;
