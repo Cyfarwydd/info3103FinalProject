@@ -218,7 +218,7 @@ class User(Resource):
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			if row is None:
-				abort(400)
+				return make_response(jsonify({"status": "fail"}), 400)
 		except:
 			abort(503)
 		finally:
@@ -268,14 +268,16 @@ class Lists(Resource):
 			cursor = dbConnection.cursor()
 			cursor.callproc(sql, sqlArgs)
 			rows = cursor.fetchall()
-			if row is None:
-				abort(404)
+			if rows is None:
+				success = 404
+			else:
+				success = 200
 		except:
 			abort(500)
 		finally:
 			cursor.close()
 			dbConnection.close
-		return make_response(jsonify({'lists': rows}), 200)
+		return make_response(jsonify({'lists': rows}), success)
 	def post(self, userID, listName):
 		if not request.json or not 'listName' in request.json:
 			abort(400)
@@ -368,7 +370,7 @@ api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
 #
 
 if __name__ == "__main__":
-	context = ('cert.pem', 'key.pem')
+	context = ('./certs/cert.pem', './certs/key.pem')
 	app.run(
 		host=settings.APP_HOST,
 		port=settings.APP_PORT,
