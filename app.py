@@ -204,7 +204,7 @@ class Users(Resource):
 
 
 class User(Resource):
-	def get(self):
+	def get(self, userID):
 		userID = request.json['userID'];
 		try:
 			dbConnection = pymysql.connect(
@@ -228,7 +228,7 @@ class User(Resource):
 			dbConnection.close()
 		return make_response(jsonify({"user": row}), 201)
 
-	def delete(self):
+	def delete(self, userID):
 		userID = request.json['userID'];
 		try:
 			dbConnection = pymysql.connect(
@@ -281,11 +281,9 @@ class Lists(Resource):
 	def post(self, userID):
 		if not request.json:
 			abort(400)
-		print('\nHere\n')
 		userID = request.json['userID']
 		title = request.json['title']
-		print(userID)
-		print(title)
+		descr = request.json['descr']
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
@@ -293,11 +291,9 @@ class Lists(Resource):
 				settings.DB_DATABASE,
 				charset='utf8mb4',
 				cursorclass= pymysql.cursors.DictCursor)
-			userID = request.json['userID']
-			title = request.json['title']
 			sql = 'postList'
 			cursor = dbConnection.cursor()
-			sqlArgs = (userID, title)
+			sqlArgs = (userID, title, descr)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			dbConnection.commit()
@@ -313,7 +309,7 @@ class Lists(Resource):
 			cursor.close()
 			dbConnection.close()
 		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
-		uri = uri+str(request.url_rule)+'/'+str(row['ListID'])
+		uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
 		return make_response(jsonify( { "uri": uri } ), 201)
 
 
@@ -335,7 +331,7 @@ class List(Resource):
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			if row is None:
-				return make_response(jsonify({"status": "List is empty"}), 400)
+				return make_response(jsonify({"status": "List is empty"}), 200)
 		except:
 			abort(500)
 		finally:
@@ -343,9 +339,30 @@ class List(Resource):
 			dbConnection.close()
 		return make_response(jsonify({"list": row}), 200)
 
-	def put():
-		##TODO
-		return
+#Update list name
+	def put(self, userID, listID):
+		userID = request.json['userID']
+		listID = request.json['listID']
+		title = request.json['title']
+		try:
+			dbConnection = pymysql.connect(
+				settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass = pymysql.cursors.DictCursor)
+			sql = 'updateListName'
+			cursor = dbConnection.cursor()
+			sqlArgs = (userID, listID,)
+			cursor.callproc(sql, sqlArgs)
+			dbConnection.commit()
+		except:
+			abort(503)
+		finally:
+			cursor.close()
+			dbConnection.close()
+		return make_response(jsonify({ "status": "Deletion successful" }), 200)
 
 	def delete(self, userID, listID):
 		userID = request.json['userID']
@@ -368,8 +385,50 @@ class List(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-
 		return make_response(jsonify({ "status": "Deletion successful" }), 200)
+
+class Tasks(Resource):
+	def post(self, userID, listID):
+		if not request.json:
+			abort(400)
+		userID = request.json['userID']
+		listID = request.json['listID']
+		task = request.json['task']
+		try:
+			dbConnection = pymysql.connect(settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass= pymysql.cursors.DictCursor)
+			sql = 'createTask'
+			cursor = dbConnection.cursor()
+			sqlArgs = (userID, listID, task)
+			cursor.callproc(sql, sqlArgs)
+			row = cursor.fetchone()
+			dbConnection.commit()
+			sql = 'getLastTask'
+			cursor = dbConnection.cursor()
+			print(1)
+			sqlArgs = (listID,)
+			cursor.callproc(sql, sqlArgs)
+			print(1)
+			row = cursor.fetchone()
+			print(1)
+			dbConnection.commit()
+		except:
+			abort(503)
+		finally:
+			cursor.close()
+			dbConnection.close()
+		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+		uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+ str(listID) + '/'+'tasks'+ '/' + str(row['TaskID'])
+		return make_response(jsonify( { "uri": uri } ), 201)
+
+#	def post(self, userID, listID):
+
+
+#class Task(Resource):
 
 ###############################################################################
 #			Adding resources
@@ -380,6 +439,7 @@ api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<string:userID>')
 api.add_resource(Lists, '/users/<string:userID>/lists')
 api.add_resource(List, '/users/<string:userID>/lists/<int:listID>')
+api.add_resource(Tasks, '/users/<string:userID>/lists/<int:listID>/tasks')
 
 
 ###############################################################################
