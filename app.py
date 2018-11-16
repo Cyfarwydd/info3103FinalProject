@@ -52,6 +52,79 @@ class Root(Resource):
 	def get(self):
 		return app.send_static_file('./index.html')
 
+class SignUp(Resource):
+	def post(self):
+		if not request.json:
+			abort(400)
+		parser = reqparse.RequestParser()
+		try:
+			parser.add_argument('Username', type=str, required=True)
+			parser.add_argument('Password', type=str, required=True)
+			parser.add_argument('Email', type=str, required=True)
+			request_params = parser.parse_args()
+		except:
+			abort(400)
+
+		#if they are logged in...
+		if request_params['Username'] in session:
+			response= {'status': 'success'}
+			responseCode = 200
+		else:
+			try:
+				ldapServer = Server(host=settings.LDAP_HOST)
+				ldapConnection = Connection(ldapServer,
+					raise_exceptions=True,
+					user='uid='+request_params['Username'] + ', ou=People,ou=fcs,o=unb',
+					password = request_params['Password'])
+				ldapConnection.open()
+				ldapConnection.start_tls()
+				ldapConnection.bind()
+				session['username'] = request_params['Username']
+				response = {'status': 'success'}
+				responseCode = 201
+			except(LDAPException):
+				response = {'status': 'Access denied'}
+				responseCode = 403
+			finally:
+				ldapConnection.unbind()
+						##THIS ALL WORKS UP ABOVE ^^^^^
+		try:
+			dbConnection = pymysql.connect(
+				settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass=pymysql.cursors.DictCursor)
+			sql = 'getUserByName'
+			sqlArgs = (session['username'],)
+			print(session['username'])
+			cursor = dbConnection.cursor()
+			cursor.callproc(sql, sqlArgs)
+			row = cursor.fetchone()
+			if row is None:
+				sql = 'createUser'
+				sqlArgs = (session['username'], request_params['Email'])
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
+				sql = 'getUserByName'
+				sqlArgs = (session['username'],)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
+				uri = uri+ '/' + "users"
+				uri = uri + '/'+str(row['UserID'])
+				return make_response(jsonify({"uri": uri}), responseCode)
+			else:
+				response = {'status': 'User already exists'}
+				responseCode = 400;
+		except:
+			responseCode = 500
+		finally:
+			cursor.close()
+			dbConnection.close()
+		return make_response(jsonify(response), responseCode)
+
 class SignIn(Resource):
 	def post(self):
 		if not request.json:
@@ -102,21 +175,19 @@ class SignIn(Resource):
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			if row is None:
-				sql = 'createUser'
-				sqlArgs = (session['username'], session['username']+'@unb.ca')
-				cursor.callproc(sql, sqlArgs)
-				dbConnection.commit()
-
-			sql = 'getUserByName'
-			sqlArgs = (session['username'],)
-			cursor.callproc(sql, sqlArgs)
-			row = cursor.fetchone()
+				response = {'status': 'Username does not exist'}
+				responseCode = 400
+			else:
+				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
+				uri = uri+str(request.url_rule)+'/'+str(row["UserID"])
+				return make_response(jsonify({"uri":uri}), 200)
 		except:
 			response = {'status': 'Fail'}
 			responseCode = 500
 		finally:
 			cursor.close()
 			dbConnection.close()
+
 
 		return make_response(jsonify(response), responseCode)
 
@@ -434,6 +505,7 @@ class Tasks(Resource):
 #			Adding resources
 #
 api.add_resource(Root,'/')
+api.add_resource(SignUp, '/signup')
 api.add_resource(SignIn, '/signin')
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<string:userID>')
