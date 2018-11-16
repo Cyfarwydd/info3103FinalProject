@@ -63,7 +63,7 @@ class SignIn(Resource):
 			request_params = parser.parse_args()
 		except:
 			abort(400)
-	
+
 		#if they are logged in...
 		if request_params['Username'] in session:
 			response= {'status': 'success'}
@@ -73,7 +73,7 @@ class SignIn(Resource):
 				ldapServer = Server(host=settings.LDAP_HOST)
 				ldapConnection = Connection(ldapServer,
 					raise_exceptions=True,
-					user='uid='+request_params['Username'] + ', ou=People,ou=fcs,o=unb',			
+					user='uid='+request_params['Username'] + ', ou=People,ou=fcs,o=unb',
 					password = request_params['Password'])
 				ldapConnection.open()
 				ldapConnection.start_tls()
@@ -106,8 +106,8 @@ class SignIn(Resource):
 				sqlArgs = (session['username'], session['username']+'@unb.ca')
 				cursor.callproc(sql, sqlArgs)
 				dbConnection.commit()
-				
-			sql = 'getUserByName'	
+
+			sql = 'getUserByName'
 			sqlArgs = (session['username'],)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
@@ -117,9 +117,9 @@ class SignIn(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
-		
+
 		return make_response(jsonify(response), responseCode)
-					
+
 	def get(self):
 		if 'username' in session:
 			response = {'status': 'success'}
@@ -128,7 +128,7 @@ class SignIn(Resource):
 			response = {'status': 'fail'}
 			responseCode = 403
 		return make_response(jsonify(response), responseCode)
-	
+
 	def delete(self):
 		success = False
 		successCode = 400
@@ -137,7 +137,7 @@ class SignIn(Resource):
 			successCode = 200
 			session.clear()
 		return make_response(jsonify({'success': success}), successCode)
-		
+
 class Users(Resource):
 	def get(self):
 		try:
@@ -158,6 +158,7 @@ class Users(Resource):
 			cursor.close()
 			dbConnection.close()
 		return make_response(jsonify({'users': rows}), 200)
+
 	def post(self):
 		if not request.json or not 'Username' in request.json:
 			abort(401)	#a user is trying to make another user
@@ -203,7 +204,8 @@ class Users(Resource):
 
 
 class User(Resource):
-	def get(self, userID):
+	def get(self):
+		userID = request.json['userID'];
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
@@ -226,12 +228,8 @@ class User(Resource):
 			dbConnection.close()
 		return make_response(jsonify({"user": row}), 201)
 
-	def put(self,):
-
-	##don't know what to put here yet
-		return
-
-	def delete(self, userID):
+	def delete(self):
+		userID = request.json['userID'];
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
@@ -255,6 +253,7 @@ class User(Resource):
 
 class Lists(Resource):
 	def get(self, userID):
+		userID = request.json['userID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
@@ -278,9 +277,15 @@ class Lists(Resource):
 			cursor.close()
 			dbConnection.close
 		return make_response(jsonify({'lists': rows}), success)
-	def post(self, userID, listName):
-		if not request.json or not 'listName' in request.json:
+
+	def post(self, userID):
+		if not request.json:
 			abort(400)
+		print('\nHere\n')
+		userID = request.json['userID']
+		title = request.json['title']
+		print(userID)
+		print(title)
 		try:
 			dbConnection = pymysql.connect(settings.DB_HOST,
 				settings.DB_USER,
@@ -288,9 +293,17 @@ class Lists(Resource):
 				settings.DB_DATABASE,
 				charset='utf8mb4',
 				cursorclass= pymysql.cursors.DictCursor)
+			userID = request.json['userID']
+			title = request.json['title']
 			sql = 'postList'
 			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listName)
+			sqlArgs = (userID, title)
+			cursor.callproc(sql, sqlArgs)
+			row = cursor.fetchone()
+			dbConnection.commit()
+			sql = 'getLastList'
+			cursor = dbConnection.cursor()
+			sqlArgs = (userID,)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			dbConnection.commit()
@@ -300,12 +313,14 @@ class Lists(Resource):
 			cursor.close()
 			dbConnection.close()
 		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
-		uri = uri+str(request.url_rule)+'/'+str(row['LAST_INSERT_ID()'])
+		uri = uri+str(request.url_rule)+'/'+str(row['ListID'])
 		return make_response(jsonify( { "uri": uri } ), 201)
 
 
 class List(Resource):
 	def get(self, userID, listID):
+		userID = request.json['userID']
+		listID = request.json['listID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
@@ -316,11 +331,11 @@ class List(Resource):
 				cursorclass = pymysql.cursors.DictCursor)
 			sql = 'getListByID'
 			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID,)
+			sqlArgs = (listID,)
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			if row is None:
-				abort(404)
+				return make_response(jsonify({"status": "List is empty"}), 400)
 		except:
 			abort(500)
 		finally:
@@ -333,6 +348,8 @@ class List(Resource):
 		return
 
 	def delete(self, userID, listID):
+		userID = request.json['userID']
+		listID = request.json['listID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
@@ -352,7 +369,7 @@ class List(Resource):
 			cursor.close()
 			dbConnection.close()
 
-		return make_response(jsonify(), 200)
+		return make_response(jsonify({ "status": "Deletion successful" }), 200)
 
 ###############################################################################
 #			Adding resources
