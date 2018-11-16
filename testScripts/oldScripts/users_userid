@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #DELETE
-read -p "Username: " username
-curl -i -H "Content-Type: application/json" -X DELETE -d '{"Username": "'$username'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$username
+read -p "UserID: " username
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"UserID": "'$username'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$username
 
 #GET
 curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca:60513/users/$username

@@ -1,0 +1,7 @@
+#!/bin/bash
+#grab title and userid
+read -p "Title: " title
+read -p "UserID: " userID
+
+#curl command
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'"$title"'", "userID": "'$userID'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<portNum>/users/$userID/lists

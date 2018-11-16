@@ -1,0 +1,6 @@
+#!/bin/bash
+#reads in username
+read -p "Username: " username
+
+#curl command
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"Username": "'$username'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$username

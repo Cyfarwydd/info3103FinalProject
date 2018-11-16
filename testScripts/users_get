@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#curl command
+curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca/users
