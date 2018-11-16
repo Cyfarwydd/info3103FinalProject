@@ -4,8 +4,8 @@ DROP PROCEDURE IF EXISTS finishTask //
 CREATE PROCEDURE finishTask(
 	in
 	usID int,
-	lID int,
-	tID int
+	in lID int,
+	in tID int
 )
 	BEGIN
 	if (select ListID from ToDoLists where (UserID = usID AND ListID = lID)) then
