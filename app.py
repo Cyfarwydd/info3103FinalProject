@@ -67,7 +67,7 @@ class SignUp(Resource):
 
 		#if they are logged in...
 		if request_params['Username'] in session:
-			response= {'status': 'success'}
+			response= {'status': 'user already logged in'}
 			responseCode = 200
 		else:
 			try:
@@ -141,6 +141,7 @@ class SignIn(Resource):
 		if request_params['Username'] in session:
 			response= {'status': 'success'}
 			responseCode = 200
+			return make_response(jsonify(response), responseCode)
 		else:
 			try:
 				ldapServer = Server(host=settings.LDAP_HOST)
@@ -151,10 +152,13 @@ class SignIn(Resource):
 				ldapConnection.open()
 				ldapConnection.start_tls()
 				ldapConnection.bind()
+<<<<<<< HEAD
 				session['Username'] = request_params['Username']
 				print(session)
 				response = {'status': 'success'}
 				responseCode = 201
+=======
+>>>>>>> e5dd5dd49ce4ccb839ea7e14285ef1f4b76096d8
 			except(LDAPException):
 				response = {'status': 'Access denied'}
 				responseCode = 403
@@ -182,7 +186,7 @@ class SignIn(Resource):
 			else:
 				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
 				uri = uri+str(request.url_rule)+'/'+str(row["UserID"])
-				return make_response(jsonify({"uri":uri}), 200)
+				return make_response(jsonify({"uri":uri}), 201)
 		except:
 			response = {'status': 'Fail'}
 			responseCode = 500
@@ -204,16 +208,14 @@ class SignIn(Resource):
 		return make_response(jsonify(response), responseCode)
 
 	def delete(self):
+		successCode = 401
+		success = False
 		if 'Username' in session:
-			success = False
-			successCode = 400
-			if 'Username' in session:
-				success = True
-				successCode = 200
-				session.clear()
-			return make_response(jsonify({'success': success}), successCode)
+			success = True
+			successCode = 200
+			session.clear()
 		else:
-			return make_response(jsonify({"status": "failure"}), 401)
+			return make_response(jsonify({"status": success}), successCode)
 
 class Users(Resource):
 	def get(self):
@@ -303,6 +305,7 @@ class User(Resource):
 		finally:
 			cursor.close()
 			dbConnection.close()
+
 		return make_response(jsonify({"user": row}), 201)
 
 	def delete(self, userID):
@@ -390,7 +393,7 @@ class Lists(Resource):
 			finally:
 				cursor.close()
 				dbConnection.close()
-			uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+	session		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
 			uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
 			return make_response(jsonify( { "uri": uri } ), 201)
 		else:
