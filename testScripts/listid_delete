@@ -2,6 +2,5 @@
 #grabs userID, listID, taskID
 read -p "userID: " userID
 read -p "listID: " listID
-read -p "taskID: " taskID
 
-curl -i -H "Content-Type: application/json" -X DELETE -d '{"listID": "'$listID'", "taskID": "'$taskID'", "userID": "'$userID'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<portNum>/users/$userID/lists/$listID
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"listID": "'$listID'", "userID": "'$userID'"}' -c cookie-jar -k https://info3103.cs.unb.ca:23487/users/$userID/lists/$listID
