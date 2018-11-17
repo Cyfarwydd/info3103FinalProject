@@ -423,7 +423,8 @@ class List(Resource):
 		if 'username' in session:
 			userID = request.json['userID']
 			listID = request.json['listID']
-			title = request.json['title']
+			title = request.json['lstName']
+			description = request.json['descr']
 			try:
 				dbConnection = pymysql.connect(
 					settings.DB_HOST,
@@ -432,17 +433,24 @@ class List(Resource):
 					settings.DB_DATABASE,
 					charset='utf8mb4',
 					cursorclass = pymysql.cursors.DictCursor)
-				sql = 'updateListName'
-				cursor = dbConnection.cursor()
-				sqlArgs = (userID, listID,)
-				cursor.callproc(sql, sqlArgs)
-				dbConnection.commit()
+				if title != None:
+					sql = 'updateListName'
+					cursor = dbConnection.cursor()
+					sqlArgs = (title, userID, listID,)
+					cursor.callproc(sql, sqlArgs)
+					dbConnection.commit()
+				if description != None:
+					sql = 'changeListDescription'
+					cursor = dbConnection.cursor()
+					sqlArgs = (description, userID, listID,)
+					cursor.callproc(sql, sqlArgs)
+					dbConnection.commit()
 			except:
 				abort(503)
 			finally:
 				cursor.close()
 				dbConnection.close()
-			return make_response(jsonify({ "status": "Deletion successful" }), 200)
+			return make_response(jsonify({ "status": "Update successful" }), 200)
 		else:
 			return make_response(jsonify({ "status": "Who are you?"}), 401)
 	def delete(self, userID, listID):
@@ -472,8 +480,8 @@ class List(Resource):
 			return make_response(jsonify({ "status": "Who are you?"}), 401)
 
 class Tasks(Resource):
-	if 'username' in session:
-		def post(self, userID, listID):
+	def post(self, userID, listID):
+		if 'username' in session:
 			if not request.json:
 				abort(400)
 			userID = request.json['userID']
