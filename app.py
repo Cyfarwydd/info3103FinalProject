@@ -79,7 +79,7 @@ class SignUp(Resource):
 				ldapConnection.open()
 				ldapConnection.start_tls()
 				ldapConnection.bind()
-				session['username'] = request_params['Username']
+				session['Username'] = request_params['Username']
 				response = {'status': 'success'}
 				responseCode = 201
 			except(LDAPException):
@@ -97,18 +97,18 @@ class SignUp(Resource):
 				charset='utf8mb4',
 				cursorclass=pymysql.cursors.DictCursor)
 			sql = 'getUserByName'
-			sqlArgs = (session['username'],)
-			print(session['username'])
+			sqlArgs = (session['Username'],)
+			print(session['Username'])
 			cursor = dbConnection.cursor()
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
 			if row is None:
 				sql = 'createUser'
-				sqlArgs = (session['username'], request_params['Email'])
+				sqlArgs = (session['Username'], request_params['Email'])
 				cursor.callproc(sql, sqlArgs)
 				dbConnection.commit()
 				sql = 'getUserByName'
-				sqlArgs = (session['username'],)
+				sqlArgs = (session['Username'],)
 				cursor.callproc(sql, sqlArgs)
 				row = cursor.fetchone()
 				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
@@ -151,7 +151,7 @@ class SignIn(Resource):
 				ldapConnection.open()
 				ldapConnection.start_tls()
 				ldapConnection.bind()
-				session['username'] = request_params['Username']
+				session['Username'] = request_params['Username']
 				response = {'status': 'success'}
 				responseCode = 201
 			except(LDAPException):
@@ -170,7 +170,7 @@ class SignIn(Resource):
 				charset='utf8mb4',
 				cursorclass=pymysql.cursors.DictCursor)
 			sql = 'getUserByName'
-			sqlArgs = (session['username'],)
+			sqlArgs = (session['Username'],)
 			cursor = dbConnection.cursor()
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchone()
@@ -192,7 +192,7 @@ class SignIn(Resource):
 		return make_response(jsonify(response), responseCode)
 
 	def get(self):
-		if 'username' in session:
+		if 'Username' in session:
 			response = {'status': 'success'}
 			responseCode = 200
 		else:
@@ -201,10 +201,10 @@ class SignIn(Resource):
 		return make_response(jsonify(response), responseCode)
 
 	def delete(self):
-		if 'username' in session:
+		if 'Username' in session:
 			success = False
 			successCode = 400
-			if 'username' in session:
+			if 'Username' in session:
 				success = True
 				successCode = 200
 				session.clear()
@@ -303,7 +303,7 @@ class User(Resource):
 		return make_response(jsonify({"user": row}), 201)
 
 	def delete(self, userID):
-		if 'username' in session:
+		if 'Username' in session:
 			userID = request.json['userID'];
 			try:
 				dbConnection = pymysql.connect(
@@ -356,7 +356,7 @@ class Lists(Resource):
 		return make_response(jsonify({'lists': rows}), success)
 
 	def post(self, userID):
-		if 'username' in session:
+		if 'Username' in session:
 			if not request.json:
 				abort(400)
 			userID = request.json['userID']
@@ -420,7 +420,7 @@ class List(Resource):
 
 #Update list name
 	def put(self, userID, listID):
-		if 'username' in session:
+		if 'Username' in session:
 			userID = request.json['userID']
 			listID = request.json['listID']
 			title = request.json['title']
@@ -446,7 +446,7 @@ class List(Resource):
 		else:
 			return make_response(jsonify({ "status": "Who are you?"}), 401)
 	def delete(self, userID, listID):
-		if 'username' in session:
+		if 'Username' in session:
 			userID = request.json['userID']
 			listID = request.json['listID']
 			try:
@@ -473,7 +473,7 @@ class List(Resource):
 
 class Tasks(Resource):
 	def post(self, userID, listID):
-		if 'username' in session:
+		if 'Username' in session:
 			if not request.json:
 				abort(400)
 			userID = request.json['userID']
