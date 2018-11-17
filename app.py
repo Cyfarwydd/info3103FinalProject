@@ -152,13 +152,6 @@ class SignIn(Resource):
 				ldapConnection.open()
 				ldapConnection.start_tls()
 				ldapConnection.bind()
-<<<<<<< HEAD
-				session['Username'] = request_params['Username']
-				print(session)
-				response = {'status': 'success'}
-				responseCode = 201
-=======
->>>>>>> e5dd5dd49ce4ccb839ea7e14285ef1f4b76096d8
 			except(LDAPException):
 				response = {'status': 'Access denied'}
 				responseCode = 403
@@ -393,7 +386,7 @@ class Lists(Resource):
 			finally:
 				cursor.close()
 				dbConnection.close()
-	session		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+			uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
 			uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
 			return make_response(jsonify( { "uri": uri } ), 201)
 		else:
@@ -550,6 +543,7 @@ class Tasks(Resource):
 		return make_response(jsonify({"Tasks": row}), 200)
 
 class Task(Resource):
+
 	def get(self, userID, listID, taskID):
 		listID = request.json['listID']
 		taskID = request.json['taskID']
@@ -575,9 +569,53 @@ class Task(Resource):
 			dbConnection.close()
 		return make_response(jsonify({"Task": row}), 200)
 
-	#def put():
+	def put(self, userID, listID, taskID):
+		userID = request.json['userID']
+		listID = request.json['listID']
+		taskID = request.json['taskID']
+		taskIn = request.json['taskIn']
+		try:
+			dbConnection = pymysql.connect(
+				settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass = pymysql.cursors.DictCursor)
+			sql = 'updateTask'
+			cursor = dbConnection.cursor()
+			sqlArgs = (listID, taskID, taskIn)
+			cursor.callproc(sql, sqlArgs)
+			dbConnection.commit()
+		except:
+			abort(503)
+		finally:
+			cursor.close()
+			dbConnection.close()
+		return make_response(jsonify({ "status": "Update successful" }), 200)
 
-	#def delete():
+	def delete(self, userID, listID, taskID):
+		taskID = request.json['taskID']
+		listID = request.json['listID']
+		try:
+			dbConnection = pymysql.connect(
+				settings.DB_HOST,
+				settings.DB_USER,
+				settings.DB_PASSWD,
+				settings.DB_DATABASE,
+				charset='utf8mb4',
+				cursorclass = pymysql.cursors.DictCursor)
+			sql = 'deleteTask'
+			cursor = dbConnection.cursor()
+			sqlArgs = (listID, taskID,)
+			cursor.callproc(sql, sqlArgs)
+			dbConnection.commit()
+		except:
+			abort(503)
+		finally:
+			cursor.close()
+			dbConnection.close()
+		return make_response(jsonify({ "status": "Deletion successful" }), 200)
 
 ###############################################################################
 #			Adding resources
