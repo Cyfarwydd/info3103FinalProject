@@ -448,7 +448,7 @@ class List(Resource):
 				cursorclass = pymysql.cursors.DictCursor)
 			sql = 'deleteList'
 			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID,)
+			sqlArgs = (listID, userID, )
 			cursor.callproc(sql, sqlArgs)
 			dbConnection.commit()
 		except:
