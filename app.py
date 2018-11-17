@@ -472,8 +472,8 @@ class List(Resource):
 			return make_response(jsonify({ "status": "Who are you?"}), 401)
 
 class Tasks(Resource):
-	if 'username' in session:
-		def post(self, userID, listID):
+	def post(self, userID, listID):
+		if 'username' in session:
 			if not request.json:
 				abort(400)
 			userID = request.json['userID']
