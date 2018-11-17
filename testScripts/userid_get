@@ -1,6 +1,6 @@
 #!/bin/bash
 #get username
-read -p "Username: " username
+read -p "UserID: " username
 
 #curl command
-curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca:60513/users/$username
+curl -i -H "Content-Type: application/json" -X GET -d '{"userID": "'$username'"}' -k https://info3103.cs.unb.ca:<portNum>/users/$username
