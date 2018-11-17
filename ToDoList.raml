@@ -76,6 +76,12 @@ types:
     description: The signin page for returning users.
     delete:
       description: deleting your session. "Logging out".
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+          required: true
       responses:
         200:
           body:
@@ -95,6 +101,12 @@ types:
                 }
     post:
       description: Where you go to login
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+          required: true
       responses:
         200:
           body:
@@ -198,6 +210,12 @@ types:
               {"message": "500 Server err - try again"}
    post:
      description: Adds a new user to the list of users
+     queryParameters:
+       access_token:
+         displayName: UserID
+         type: string
+         description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+         required: true
      responses:
        201:
          body:
@@ -383,6 +401,11 @@ types:
             TaskComplete:
               type: boolean
               required: false
+            access_token:
+              displayName: UserID
+              type: string
+              description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+              required: true
           responses:
             200:
               body:
