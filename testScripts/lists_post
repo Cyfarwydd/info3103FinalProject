@@ -3,6 +3,7 @@
 read -p "Title: " title
 read -p "Description: " descr
 read -p "UserID: " userID
+read -p "Port: " port
 
 #curl command
-curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'"$title"'", "descr": "'"$descr"'", "userID": "'$userID'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<portNum>/users/$userID/lists
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'"$title"'", "descr": "'"$descr"'", "userID": "'$userID'"}' -c cookie-jar -k https://info3103.cs.unb.ca:$port/users/$userID/lists
