@@ -386,15 +386,9 @@ class Lists(Resource):
 			finally:
 				cursor.close()
 				dbConnection.close()
-<<<<<<< HEAD
 			uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
 			uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
 			return make_response(jsonify( { "uri": uri } ), 201)
-=======
-				uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
-				uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
-				return make_response(jsonify( { "uri": uri } ), 201)
->>>>>>> 7abdd3672594f563d336a967ab6dcb5c6c32eb75
 		else:
 			return make_response(jsonify( { "status": "Who are you?"}), 401)
 
