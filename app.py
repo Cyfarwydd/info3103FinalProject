@@ -201,13 +201,16 @@ class SignIn(Resource):
 		return make_response(jsonify(response), responseCode)
 
 	def delete(self):
-		success = False
-		successCode = 400
 		if 'username' in session:
-			success = True
-			successCode = 200
-			session.clear()
-		return make_response(jsonify({'success': success}), successCode)
+			success = False
+			successCode = 400
+			if 'username' in session:
+				success = True
+				successCode = 200
+				session.clear()
+			return make_response(jsonify({'success': success}), successCode)
+		else:
+			return make_response(jsonify({"status": "failure"}), 401)
 
 class Users(Resource):
 	def get(self):
@@ -300,26 +303,29 @@ class User(Resource):
 		return make_response(jsonify({"user": row}), 201)
 
 	def delete(self, userID):
-		userID = request.json['userID'];
-		try:
-			dbConnection = pymysql.connect(
-				settings.DB_HOST,
-				settings.DB_USER,
-				settings.DB_PASSWD,
-				settings.DB_DATABASE,
-				charset='utf8mb4',
-				cursorclass= pymysql.cursors.DictCursor)
-			sql = 'deleteUser'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID, )
-			cursor.callproc(sql, sqlArgs)
-			dbConnection.commit()
-		except:
-			abort(503)
-		finally:
-			cursor.close()
-			dbConnection.close()
-		return make_response(jsonify({ "status": "Deletion successful" }), 200)
+		if 'username' in session:
+			userID = request.json['userID'];
+			try:
+				dbConnection = pymysql.connect(
+					settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass= pymysql.cursors.DictCursor)
+				sql = 'deleteUser'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, )
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
+			except:
+				abort(503)
+			finally:
+				cursor.close()
+				dbConnection.close()
+			return make_response(jsonify({ "status": "Deletion successful" }), 200)
+		else:
+			return make_response(jsonify({ "status": "Who are you?"}), 401)
 
 
 class Lists(Resource):
@@ -350,39 +356,41 @@ class Lists(Resource):
 		return make_response(jsonify({'lists': rows}), success)
 
 	def post(self, userID):
-		if not request.json:
-			abort(400)
-		userID = request.json['userID']
-		title = request.json['title']
-		descr = request.json['descr']
-		try:
-			dbConnection = pymysql.connect(settings.DB_HOST,
-				settings.DB_USER,
-				settings.DB_PASSWD,
-				settings.DB_DATABASE,
-				charset='utf8mb4',
-				cursorclass= pymysql.cursors.DictCursor)
-			sql = 'postList'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID, title, descr)
-			cursor.callproc(sql, sqlArgs)
-			row = cursor.fetchone()
-			dbConnection.commit()
-			sql = 'getLastList'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID,)
-			cursor.callproc(sql, sqlArgs)
-			row = cursor.fetchone()
-			dbConnection.commit()
-		except:
-			abort(503)
-		finally:
-			cursor.close()
-			dbConnection.close()
-		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
-		uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
-		return make_response(jsonify( { "uri": uri } ), 201)
-
+		if 'username' in session:
+			if not request.json:
+				abort(400)
+			userID = request.json['userID']
+			title = request.json['title']
+			descr = request.json['descr']
+			try:
+				dbConnection = pymysql.connect(settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass= pymysql.cursors.DictCursor)
+				sql = 'postList'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, title, descr)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				dbConnection.commit()
+				sql = 'getLastList'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID,)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				dbConnection.commit()
+			except:
+				abort(503)
+			finally:
+				cursor.close()
+				dbConnection.close()
+			uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+			uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+str(row['ListID'])
+			return make_response(jsonify( { "uri": uri } ), 201)
+		else:
+			return make_response(jsonify( { "status": "Who are you?"}), 401)
 
 class List(Resource):
 	def get(self, userID, listID):
@@ -412,89 +420,98 @@ class List(Resource):
 
 #Update list name
 	def put(self, userID, listID):
-		userID = request.json['userID']
-		listID = request.json['listID']
-		title = request.json['title']
-		try:
-			dbConnection = pymysql.connect(
-				settings.DB_HOST,
-				settings.DB_USER,
-				settings.DB_PASSWD,
-				settings.DB_DATABASE,
-				charset='utf8mb4',
-				cursorclass = pymysql.cursors.DictCursor)
-			sql = 'updateListName'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID,)
-			cursor.callproc(sql, sqlArgs)
-			dbConnection.commit()
-		except:
-			abort(503)
-		finally:
-			cursor.close()
-			dbConnection.close()
-		return make_response(jsonify({ "status": "Deletion successful" }), 200)
-
+		if 'username' in session:
+			userID = request.json['userID']
+			listID = request.json['listID']
+			title = request.json['title']
+			try:
+				dbConnection = pymysql.connect(
+					settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass = pymysql.cursors.DictCursor)
+				sql = 'updateListName'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, listID,)
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
+			except:
+				abort(503)
+			finally:
+				cursor.close()
+				dbConnection.close()
+			return make_response(jsonify({ "status": "Deletion successful" }), 200)
+		else:
+			return make_response(jsonify({ "status": "Who are you?"}), 401)
 	def delete(self, userID, listID):
-		userID = request.json['userID']
-		listID = request.json['listID']
-		try:
-			dbConnection = pymysql.connect(
-				settings.DB_HOST,
-				settings.DB_USER,
-				settings.DB_PASSWD,
-				settings.DB_DATABASE,
-				charset='utf8mb4',
-				cursorclass = pymysql.cursors.DictCursor)
-			sql = 'deleteList'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID,)
-			cursor.callproc(sql, sqlArgs)
-			dbConnection.commit()
-		except:
-			abort(503)
-		finally:
-			cursor.close()
-			dbConnection.close()
-		return make_response(jsonify({ "status": "Deletion successful" }), 200)
+		if 'username' in session:
+			userID = request.json['userID']
+			listID = request.json['listID']
+			try:
+				dbConnection = pymysql.connect(
+					settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass = pymysql.cursors.DictCursor)
+				sql = 'deleteList'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, listID,)
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
+			except:
+				abort(503)
+			finally:
+				cursor.close()
+				dbConnection.close()
+			return make_response(jsonify({ "status": "Deletion successful" }), 200)
+		else:
+			return make_response(jsonify({ "status": "Who are you?"}), 401)
 
 class Tasks(Resource):
-	def post(self, userID, listID):
-		if not request.json:
-			abort(400)
-		userID = request.json['userID']
-		listID = request.json['listID']
-		task = request.json['task']
-		try:
-			dbConnection = pymysql.connect(settings.DB_HOST,
-				settings.DB_USER,
-				settings.DB_PASSWD,
-				settings.DB_DATABASE,
-				charset='utf8mb4',
-				cursorclass= pymysql.cursors.DictCursor)
-			sql = 'createTask'
-			cursor = dbConnection.cursor()
-			sqlArgs = (userID, listID, task)
-			cursor.callproc(sql, sqlArgs)
-			row = cursor.fetchone()
-			dbConnection.commit()
-			sql = 'getLastTask'
-			cursor = dbConnection.cursor()
-			print(1)
-			sqlArgs = (listID,)
-			cursor.callproc(sql, sqlArgs)
-			print(1)
-			row = cursor.fetchone()
-			print(1)
-			dbConnection.commit()
-		except:
-			abort(503)
-		finally:
-			cursor.close()
-			dbConnection.close()
-		uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
-		uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+ str(listID) + '/'+'tasks'+ '/' + str(row['TaskID'])
-		return make_response(jsonify( { "uri": uri } ), 201)
+	if 'username' in session:
+		def post(self, userID, listID):
+			if not request.json:
+				abort(400)
+			userID = request.json['userID']
+			listID = request.json['listID']
+			task = request.json['task']
+			try:
+				dbConnection = pymysql.connect(settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass= pymysql.cursors.DictCursor)
+				sql = 'createTask'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, listID, task)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				dbConnection.commit()
+				sql = 'getLastTask'
+				cursor = dbConnection.cursor()
+				print(1)
+				sqlArgs = (listID,)
+				cursor.callproc(sql, sqlArgs)
+				print(1)
+				row = cursor.fetchone()
+				print(1)
+				dbConnection.commit()
+			except:
+				abort(503)
+			finally:
+				cursor.close()
+				dbConnection.close()
+			uri = 'https://'+settings.APP_HOST+':'+str(settings.APP_PORT)
+			uri = uri + '/' + 'users' + '/' + str(userID)+ '/' + 'lists' +'/'+ str(listID) + '/'+'tasks'+ '/' + str(row['TaskID'])
+			return make_response(jsonify( { "uri": uri } ), 201)
+		else:
+			return make_response(jsonify({ "status": "Who are you?"}), 401)
+
 
 #	def post(self, userID, listID):
 
