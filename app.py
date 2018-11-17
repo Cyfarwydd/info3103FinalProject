@@ -2,7 +2,7 @@
 
 from flask import Flask, jsonify, abort, request, make_response, session
 from flask_restful import Resource, Api, reqparse
-from flask_session import Session
+from flask_session.__init__ import Session
 import pymysql.cursors
 import json
 
