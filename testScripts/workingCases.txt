@@ -4,11 +4,10 @@ lists_get	-!works
 lists_post	-!works
 root_get	-!works
 signin_delete	-!works
-signin_get	-!works
-signin_post	-!works
+signin_get	-works
+signin_post	-works
 signup_post	-works
 tasks_post	-!works
 userid_delete	-!works
-userid_get	-!works
-users_get	-!works
-users_post	-!works
+userid_get	-works
+users_get	-works
