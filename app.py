@@ -483,13 +483,20 @@ class Tasks(Resource):
 				settings.DB_DATABASE,
 				charset = 'utf8mb4',
 				cursorclass = pymysql.cursors.DictCursor)
-			sql = 'getTasksByListID'
-			cursor = dbConnection.cursor()
+			sql = 'getListByID'
 			sqlArgs = (listID,)
+			cursor = dbConnection.cursor()
 			cursor.callproc(sql, sqlArgs)
 			row = cursor.fetchall()
 			if row is None:
-				return make_response(jsonify({"status": "List is empty"}), 200)
+				return make_response(jsonify({"status": "List does not exist"}), 400)
+			else:
+				sql = 'getTasksByListID'
+				sqlArgs = (listID,)
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchall()
+				if row is None:
+					return make_response(jsonify({"status": "List is empty"}), 200)
 		except:
 			abort(500)
 		finally:
