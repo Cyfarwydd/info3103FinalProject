@@ -4,5 +4,6 @@
 read -p "userID: " userID
 read -p "listID: " listID
 read -p "Task Name: " task
+read -p "Port: " port
 
-curl -i -H "Content-Type: application/json" -X POST -d '{"userID": "'$userID'", "listID": "'$listID'", "task": "'"$task"'"}' -b cookie-jar -k https://info3103.cs.unb.ca:<portNum>/users/$userID/lists/$listID/tasks
+curl -i -H "Content-Type: application/json" -X POST -d '{"userID": "'$userID'", "listID": "'$listID'", "task": "'"$task"'"}' -b cookie-jar -k https://info3103.cs.unb.ca:$port/users/$userID/lists/$listID/tasks
