@@ -1,9 +1,10 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS updateTask //
 
-CREATE PROCEDURE updateTask(in lID int, in tskID int, in taskIn varchar(64) )
+CREATE PROCEDURE updateTask(in usID int, in lID int, in tskID int, in taskIn varchar(64) )
 BEGIN
-	UPDATE Tasks SET Task = taskIn
-		WHERE (ListID = lID AND TaskID = tskID);
+		if(select ListID from ToDoLists where (UserID = usID and ListID = lID)) then
+			 UPDATE Tasks set Task = taskIn where TaskID = tskID;
+		END IF;
 END//
 DELIMITER ;
