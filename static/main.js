@@ -1,23 +1,10 @@
-//import ../settings.py
-//var x = "Port: " + location.port;
-
 var app=new Vue({
-  el: '#app',
-  data: {
-    // status: '',
-    schs:  '',
-    sch: '',
-    addedSch: '',
-    delSch: ''
-  },
 
-  created: function () {
-
-  },
+  let port = location.port;
 
   methods:{
 
-    signUpPost : function (port, userName, password, email){
+    signUpPost : function (userName, password, email){
       var postData = {
         Username: userName,
         Password: password,
@@ -38,7 +25,7 @@ var app=new Vue({
           });
     },//signUpPost
 
-    signInPost : function (port, userName, password){
+    signInPost : function (userName, password){
       var postData = {
         Username: userName,
         Password: password
@@ -58,7 +45,7 @@ var app=new Vue({
       });
     },//signInPost
 
-    signInGet : function (port){
+    signInGet : function (){
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -74,7 +61,7 @@ var app=new Vue({
       });
     },//signInGet
 
-    signInDelete : function (port){
+    signInDelete : function (){
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -90,7 +77,7 @@ var app=new Vue({
       });
     },//signInDelete
 
-    usersGet : function (port){
+    usersGet : function (){
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -107,7 +94,7 @@ var app=new Vue({
       });
     },//usersGet
 
-    userGet : function (port, userID){
+    userGet : function (userID){
       var postData = {
         userID: userID,
         };
@@ -126,7 +113,7 @@ var app=new Vue({
       });
     },//userGet
 
-    userDelete : function (port, userID){
+    userDelete : function (userID){
       var postData = {
         userID: userID,
         };
@@ -145,9 +132,30 @@ var app=new Vue({
       });
     },//userDelete
 
-    listsGet : function (port, userID){
+    listsGet : function (userID){
       var postData = {
         userID: userID,
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.get('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists', postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//listsGet
+
+    listsPost : function (userID){
+      var postData = {
+        userID: userID,
+        title: title,
+        descr: descr
         };
       let axiosConfig = {
           headers: {
@@ -162,82 +170,176 @@ var app=new Vue({
         .catch((err) => {
           app.addedSch= err;
       });
-    },//userGet
+    },//listsPost
 
+    listGet : function (userID, listID){
+      var postData = {
+        userID: userID,
+        listID: listID
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.get('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//listGet
 
+    listPut : function (userID, listID, lstName, description){
+      var postData = {
+        userID: userID,
+        listID: listID,
+        lstName: lstName,
+        description: description
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.put('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//listPut
 
+    listDelete : function (userID, listID){
+      var postData = {
+        userID: userID,
+        listID: listID
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.delete('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//listDelete
 
+    tasksPost : function (userID, listID, task){
+      var postData = {
+        userID: userID,
+        listID: listID,
+        task: task
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.post('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//tasksPost
 
+    tasksGet : function (userID, listID){
+      var postData = {
+        userID: userID,
+        listID: listID
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.get('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//tasksGet
 
-    addSchool : function (){
+    taskGet : function (userID, listID, taskID){
+      var postData = {
+        userID: userID,
+        listID: listID,
+        taskID: taskID
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.get('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//taskGet
 
-        var postData = {
-          Name: "sch2",
-          Province: "NB",
-          Language: "EN",
-          Level: "simple"
+    taskPut : function (userID, listID, taskID, taskIn, bool){
+      var postData = {
+        userID: userID,
+        listID: listID,
+        taskID: taskID,
+        taskIn: taskIn,
+        bool: bool
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.put('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//taskPut
 
-            };
-          let axiosConfig = {
-              headers: {
-                  'Content-Type': 'application/json;charset=UTF-8',
-                  "Access-Control-Allow-Origin": "*",
-              }
-            };
+    taskDelete : function (userID, listID, taskID){
+      var postData = {
+        userID: userID,
+        listID: listID,
+        taskID: taskID,
+        };
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*",
+          }
+      };
+      axios.delete('http://info3103.cs.unb.ca:' + port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+        .then((res) => {
+          app.addedSch=res.data;
+        })
+        .catch((err) => {
+          app.addedSch= err;
+      });
+    },//taskDelete
 
-            axios.post('http://info3103.cs.unb.ca:23487/schools', postData, axiosConfig)
-            .then((res) => {
-              app.addedSch=res.data;
-            })
-            .catch((err) => {
-              app.addedSch= err;
-            });
-    },//end addSchool
+  }//end methods
 
-        schoolIDget: function (schid) {
-          // this.status='loading';
-          var app=this;
-          axios.get('http://info3103.cs.unb.ca:23487/schools/'+schid)
-          .then(function (response){
-            app.sch=response.data;
-          })
-          .catch(function(error){
-            app.sch='An error ocurred: '+error;
-
-          });
-
-        },//end schoolIDget
-
-
-	delSchool: function (schid) {
-          // this.status='loading';
-          var app=this;
-          axios.delete('http://info3103.cs.unb.ca:23487/schools/'+schid)
-          .then(function (response){
-            app.delSch=response.data;
-          })
-          .catch(function(error){
-            app.delSch='An error ocurred: '+error;
-
-          });
-
-        },//end delSchool
-
-
-        schoolsget: function (port) {
-          // this.status='loading';
-          var app=this;
-          axios.get('http://info3103.cs.unb.ca:' + port + '/schools')
-          .then(function (response){
-            app.schs=response.data.schools;
-          })
-          .catch(function(error){
-            app.schs='An error ocurred: '+error;
-
-          });
-
-        },//end schoolsget
-
-      }//end methods
-
-    })//end Vue
+})//end Vue
