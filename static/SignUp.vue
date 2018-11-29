@@ -24,10 +24,10 @@
 		},
 
 		methods: {
-			submit: function (){
-			let userName = document.getElementById("Username").value
-			let password = document.getElementById("Password").value
-			let email = document.getElementById("Email").value
+			submit: function () {
+				let userName = document.getElementById("Username").value
+				let password = document.getElementById("Password").value
+				let email = document.getElementById("Email").value
 				this.message = SignUpPost(userName, password, email)
 			}
 		}
