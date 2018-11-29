@@ -9,6 +9,7 @@
 </form>
   <p>{{ message }}</p>
   <button v-on:click="submit">Submit</button>
+  <button v-on:click="submit">Submit</button>
 </div>
 `
 </template>
