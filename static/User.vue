@@ -9,7 +9,7 @@
 
 <script>
 
-var usersLists = new Vue ({
+var user = new Vue ({
 		let ref = window.location.href
 		let id = ref.split("/")
 		el: '#user',

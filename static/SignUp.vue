@@ -17,7 +17,7 @@
 
 <script>
 
-	var usersLists = new Vue ({
+	var signUp = new Vue ({
 		el: '#signup',
 		data: {
 			message: 'Fill in fields and click Submit to sign up'

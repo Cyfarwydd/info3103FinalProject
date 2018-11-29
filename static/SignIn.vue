@@ -16,7 +16,7 @@
 
 <script>
 
-	var usersLists = new Vue ({
+	var signIn = new Vue ({
 		el: '#signin',
 		data: {
 			message: 'Sign in or click here to sign up'
