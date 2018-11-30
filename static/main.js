@@ -5,7 +5,7 @@ var app=new Vue({
       schools:  '',
       school: '',
       newSchool: '',
-      authenticated: true,
+      authenticated: false,
       status: '',
       username: '',
       password: '',
@@ -30,7 +30,7 @@ var app=new Vue({
                 "Access-Control-Allow-Origin": "*",
             }
           };
-          axios.post('http://info3103.cs.unb.ca:' + location.port + '/signup', postData, axiosConfig)
+          axios.post('https://info3103.cs.unb.ca:' + location.port + '/signup', postData, axiosConfig)
           .then((res) => {
             app.addedSch=res.data;
           })
@@ -50,7 +50,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.post('http://info3103.cs.unb.ca:' + location.port + '/signin', postData, axiosConfig)
+      axios.post('https://info3103.cs.unb.ca:' + location.port + '/signin', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -66,7 +66,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -82,8 +82,12 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.delete('http://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
+      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
         .then((res) => {
+		console.log(response)
+		this.authenticated=false
+		this.username=''
+		this.password=''		
           app.addedSch=res.data;
         })
         .catch((err) => {
@@ -99,7 +103,7 @@ var app=new Vue({
           }
       };
 
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/users', axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users', axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -118,7 +122,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.post('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID, postData, axiosConfig)
+      axios.post('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;user
         })
@@ -137,7 +141,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.delete('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID, axiosConfig)
+      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -156,7 +160,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -177,7 +181,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.post('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
+      axios.post('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -197,7 +201,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -219,7 +223,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.put('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+      axios.put('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -239,7 +243,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.delete('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
+      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -260,7 +264,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.post('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
+      axios.post('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -280,7 +284,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -301,7 +305,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -324,7 +328,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.put('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+      axios.put('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })
@@ -345,7 +349,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.delete('http://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
+      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })

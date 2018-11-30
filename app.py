@@ -17,7 +17,7 @@ cgitb.enable()
 import settings #stored in settings.py
 import ssl
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 app.secret_key = settings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
