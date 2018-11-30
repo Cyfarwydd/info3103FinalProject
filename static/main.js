@@ -2,6 +2,7 @@ var app=new Vue({
   el: '#app',
   data() {
   	return {
+      url: window.location.href,
       schools:  '',
       school: '',
       newSchool: '',
@@ -16,6 +17,13 @@ var app=new Vue({
   	}
   },
 
+
+
+  mounted: function () {
+    this.url = window.location.href
+  },
+
+
   methods:{
 
     signUpPost : function (userName, password, email){
@@ -27,7 +35,7 @@ var app=new Vue({
         let axiosConfig = {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allowhttps://info3103.cs.unb.ca:23487/-Origin": "*",
             }
           };
           axios.post('https://info3103.cs.unb.ca:' + location.port + '/signup', postData, axiosConfig)
@@ -39,10 +47,10 @@ var app=new Vue({
           });
     },//signUpPost
 
-    signInPost : function (userName, password){
+    signInPost : function (){
       var postData = {
-        Username: userName,
-        Password: password
+        Username: Document.getElementById("username"),
+        Password: Document.getElementById("password")
         };
       let axiosConfig = {
           headers: {
@@ -63,7 +71,7 @@ var app=new Vue({
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
-              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Origin": "*",username
           }
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
@@ -87,7 +95,7 @@ var app=new Vue({
 		console.log(response)
 		this.authenticated=false
 		this.username=''
-		this.password=''		
+		this.password=''
           app.addedSch=res.data;
         })
         .catch((err) => {
@@ -356,6 +364,23 @@ var app=new Vue({
         .catch((err) => {
           app.addedSch= err;
       });
+    },//taskDelete
+
+    endpoint : function (){
+      if(window.location.href.indexOf("signup") > -1)
+        return 1;
+      if(window.location.href.indexOf("signin") > -1)
+        return 2;
+      if(window.location.href.indexOf("tasks/") > -1)
+        return 3;
+      if(window.location.href.indexOf("tasks") > -1)
+        return 4;
+      if(window.location.href.indexOf("users/") > -1)
+        return 5;
+      if(window.location.href.indexOf("users") > -1)
+        return 6;
+      if(window.location.href.indexOf("/"))
+        return 7;
     },//taskDelete
 
   }//end methods
