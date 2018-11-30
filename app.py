@@ -191,14 +191,12 @@ class SignIn(Resource):
 		return make_response(jsonify(response), responseCode)
 
 	def get(self):
-		print(session)
 		if 'Username' in session:
 			response = {'status': 'success'}
 			responseCode = 200
+			return make_response(jsonify(response), responseCode)
 		else:
-			response = {'status': 'fail'}
-			responseCode = 403
-		return make_response(jsonify(response), responseCode)
+			return app.send_static_file('./index.html')
 
 	def delete(self):
 		successCode = 401

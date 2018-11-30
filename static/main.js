@@ -3,7 +3,7 @@ var app=new Vue({
   data() {
   	return {
       url: window.location.href,
-      schools:  '',
+      users:  '',
       school: '',
       newSchool: '',
       authenticated: false,
@@ -113,7 +113,8 @@ var app=new Vue({
 
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/users', axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          console.log(res.data)
+          this.users = res.data.users;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -156,7 +157,7 @@ var app=new Vue({
         .catch((err) => {
           app.addedSch= err;
       });
-    },//userDelete
+    },//userDelete    console.log(res.data)
 
     listsGet : function (userID){
       var postData = {
