@@ -12,7 +12,7 @@ var app=new Vue({
       password: '',
       token: '',
   		output: {
-  		response: ''
+  		    response: ''
   		}
   	}
   },
@@ -71,7 +71,7 @@ var app=new Vue({
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
-              "Access-Control-Allow-Origin": "*",username
+              "Access-Control-Allow-Origin": "*",
           }
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
@@ -80,7 +80,7 @@ var app=new Vue({
         })
         .catch((err) => {
           app.addedSch= err;
-      });
+      })
     },//signInGet
 
     signInDelete : function (){
@@ -104,21 +104,15 @@ var app=new Vue({
     },//signInDelete
 
     usersGet : function (){
-      let axiosConfig = {
-          headers: {
-              'Content-Type': 'application/json;charset=UTF-8',
-              "Access-Control-Allow-Origin": "*",
-          }
-      };
-
-      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users', axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users')
         .then((res) => {
-          console.log(res.data)
+          console.log(res)
           this.users = res.data.users;
+          this.status = 'Users obtained'
         })
-        .catch((err) => {
-          app.addedSch= err;
-      });
+        .catch(error => {
+          this.status= error.message
+      })
     },//usersGet
 
     userGet : function (userID){
@@ -136,7 +130,8 @@ var app=new Vue({
           app.addedSch=res.data;user
         })
         .catch((err) => {
-          app.addedSch= err;
+          console.log(error);
+          this.status= error.message;
       });
     },//userGet
 
