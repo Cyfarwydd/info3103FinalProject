@@ -10,6 +10,7 @@ var app=new Vue({
       status: '',
       username: '',
       password: '',
+      id: '',
       token: '',
   		output: {
   		    response: ''
@@ -49,8 +50,8 @@ var app=new Vue({
 
     signInPost : function (){
       var postData = {
-        Username: Document.getElementById("username"),
-        Password: Document.getElementById("password")
+        Username: document.getElementById("username"),
+        Password: document.getElementById("password")
         };
       let axiosConfig = {
           headers: {
@@ -61,6 +62,7 @@ var app=new Vue({
       axios.post('https://info3103.cs.unb.ca:' + location.port + '/signin', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
+          this.username =res.data;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -156,8 +158,10 @@ var app=new Vue({
 
     listsGet : function (userID){
       var postData = {
-        userID: userID,
+        userID: document.getElementById('usID'),
         };
+      print(postData)
+      print("^: postData")
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -166,7 +170,7 @@ var app=new Vue({
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          this.users=res.data;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -290,7 +294,7 @@ var app=new Vue({
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          this.user=res.data;
         })
         .catch((err) => {
           app.addedSch= err;
