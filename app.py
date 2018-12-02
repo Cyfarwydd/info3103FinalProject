@@ -180,7 +180,7 @@ class SignIn(Resource):
 				responseCode = 400
 			else:
 				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
-				uri = uri+str(request.url_rule)+'/'+str(row["UserID"])
+				uri = uri+'users/'+str(row["UserID"])
 				return make_response(jsonify({"uri":uri}), 201)
 		except:
 			response = {'status': 'Fail'}

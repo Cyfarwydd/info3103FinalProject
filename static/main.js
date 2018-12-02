@@ -29,10 +29,10 @@ var app=new Vue({
 
     signUpPost : function (userName, password, email){
       var postData = {
-        Username: userName,
-        Password: password,
-        email: email
-          };
+        'Username': this.newUser,
+        'Password': this.newpword,
+        'Email': this.email
+      };
         let axiosConfig = {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -41,18 +41,21 @@ var app=new Vue({
           };
           axios.post('https://info3103.cs.unb.ca:' + location.port + '/signup', postData, axiosConfig)
           .then((res) => {
-            app.addedSch=res.data;
+            this.authenticated = true;
+            this.url = res.data;
+            console.log("Logged In");
+            console.log(this.url);
           })
           .catch((err) => {
-            app.addedSch= err;
+            console.log(err);
           });
     },//signUpPost
 
     signInPost : function (){
       var postData = {
-        Username: document.getElementById("username"),
-        Password: document.getElementById("password")
-        };
+        'Username': this.username,
+        'Password': this.password
+      };
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -61,11 +64,13 @@ var app=new Vue({
       };
       axios.post('https://info3103.cs.unb.ca:' + location.port + '/signin', postData, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
-          this.username =res.data;
+          this.authenticated = true;
+          this.url = res.data;
+          console.log("Logged In");
+          console.log(this.url);
         })
         .catch((err) => {
-          app.addedSch= err;
+          console.log(err);
       });
     },//signInPost
 
@@ -86,22 +91,15 @@ var app=new Vue({
     },//signInGet
 
     signInDelete : function (){
-      let axiosConfig = {
-          headers: {
-              'Content-Type': 'application/json;charset=UTF-8',
-              "Access-Control-Allow-Origin": "*",
-          }
-      };
-      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/signin', axiosConfig)
+      axios.delete('https://info3103.cs.unb.ca:' + location.port + '/signin')
         .then((res) => {
-		console.log(response)
-		this.authenticated=false
-		this.username=''
-		this.password=''
-          app.addedSch=res.data;
+		        console.log(res)
+		        this.authenticated=false;
+		        this.username=''
+		        this.password=''
         })
         .catch((err) => {
-          app.addedSch= err;
+            console.log(err);
       });
     },//signInDelete
 
