@@ -175,19 +175,20 @@ var app=new Vue({
       });
     },//listsGet
 
-    listsPost : function (userID){
+    listsPost : function (userIDIn, titleIn, descrIn){
       var postData = {
-        userID: userID,
-        title: title,
-        descr: descr
+        userID: userIDIn,
+        title: titleIn,
+        descr: descrIn
         };
+      console.log(postData);
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.post('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
+      axios.post('https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists', postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
         })

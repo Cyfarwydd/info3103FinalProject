@@ -64,9 +64,10 @@
 						<button id="listsGet" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listsGet(usID.value)">Go!</button>
 
 						<p>Add another list: </p></br>
+						<input type="text" id="usIDIn" placeholder="User ID"></input></br>
 						<input type="text" id="listName" placeholder="name of list"></input></br>
 						<input type="text" id="listDesc" placeholder="list description"></input></br>
-						<button id="listsPost" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listsPost()">Post List</button>
+						<button id="listsPost" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listsPost(usIDIn.value, listName.value, listDesc.value)">Post List</button>
 
 						<div id="app">
 							<ul id="app">
