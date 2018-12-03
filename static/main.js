@@ -4,8 +4,8 @@ var app=new Vue({
   	return {
       url: window.location.href,
       users:  '',
-      school: '',
-      newSchool: '',
+      lists: '',
+      tasks: '',
       authenticated: false,
       status: '',
       username: '',
@@ -168,7 +168,7 @@ var app=new Vue({
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists', postData, axiosConfig)
         .then((res) => {
-          this.users=res.data;
+          this.lists=res.data;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -181,7 +181,6 @@ var app=new Vue({
         title: titleIn,
         descr: descrIn
         };
-      console.log(postData);
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -293,10 +292,10 @@ var app=new Vue({
       };
       axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks', postData, axiosConfig)
         .then((res) => {
-          this.user=res.data;
+          this.tasks=res.data;
         })
         .catch((err) => {
-          app.addedSch= err;
+          this.status= err;
       });
     },//tasksGet
 
@@ -317,7 +316,7 @@ var app=new Vue({
           app.addedSch=res.data;
         })
         .catch((err) => {
-          app.addedSch= err;
+          this.status= err;
       });
     },//taskGet
 

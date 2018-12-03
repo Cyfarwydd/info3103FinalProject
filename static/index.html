@@ -71,7 +71,7 @@
 
 						<div id="app">
 							<ul id="app">
-								<li v-for="list in users">
+								<li v-for="list in lists">
 										{{list}}</br>
 										<input type="text" id="listNewName" placeholder="leave empty if you don't want to change name"></input></br>
 										<input type="text" id="listNewDesc" placeholder="leave empty if you don't want to change description"></input></br>
@@ -96,7 +96,7 @@
 
 						<div id="app">
 							<ul id="app">
-								<li v-for="task in users">
+								<li v-for="task in tasks">
 										<input type="checkbox" id="taskDone" v-on:click="taskPut()"></input> {{task}}</br>
 										<input type="text" id="taskPutTitle" placeholder="Leave empty if you don't want to change task name"></input></br>
 										<button id="taskPut" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="taskPut()">Edit task</button>
