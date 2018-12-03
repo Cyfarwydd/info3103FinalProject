@@ -157,6 +157,7 @@ class SignIn(Resource):
 			except(LDAPException):
 				response = {'status': 'Access denied'}
 				responseCode = 403
+				return make_response(jsonify(response), responseCode)
 			finally:
 				ldapConnection.unbind()
 
@@ -178,6 +179,7 @@ class SignIn(Resource):
 			if row is None:
 				response = {'status': 'Username does not exist'}
 				responseCode = 400
+				return make_response(jsonify(response), responseCode)
 			else:
 				uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
 				uri = uri+'users/'+str(row["UserID"])
@@ -292,7 +294,6 @@ class User(Resource):
 
 class Lists(Resource):
 	def get(self, userID):
-		userID = request.json['userID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,

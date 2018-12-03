@@ -29,9 +29,9 @@ var app=new Vue({
 
     signUpPost : function (userName, password, email){
       var postData = {
-        'Username': this.newUser,
-        'Password': this.newpword,
-        'Email': this.email
+        Username: userName,
+        Password: password,
+        Email: email
       };
         let axiosConfig = {
             headers: {
@@ -51,10 +51,10 @@ var app=new Vue({
           });
     },//signUpPost
 
-    signInPost : function (){
+    signInPost : function (username, password){
       var postData = {
-        'Username': this.username,
-        'Password': this.password
+        Username: username,
+        Password: password
       };
       let axiosConfig = {
           headers: {
@@ -65,6 +65,7 @@ var app=new Vue({
       axios.post('https://info3103.cs.unb.ca:' + location.port + '/signin', postData, axiosConfig)
         .then((res) => {
           this.authenticated = true;
+          console.log(res.data)
           this.url = res.data;
           console.log("Logged In");
           console.log(this.url);
@@ -154,19 +155,18 @@ var app=new Vue({
       });
     },//userDelete    console.log(res.data)
 
-    listsGet : function (userID){
+    listsGet : function (usID){
       var postData = {
-        userID: document.getElementById('usID'),
+        userID: usID,
         };
-      print(postData)
-      print("^: postData")
+        console.log(postData)
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
       };
-      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists', postData, axiosConfig)
+      axios.get('https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists', postData, axiosConfig)
         .then((res) => {
           this.users=res.data;
         })
