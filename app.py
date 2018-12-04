@@ -423,7 +423,7 @@ class List(Resource):
 				if description != "":
 					sql = 'changeListDescription'
 					cursor = dbConnection.cursor()
-					sqlArgs = (description, userID, listID,)
+					sqlArgs = (description, listID, userID)
 					cursor.callproc(sql, sqlArgs)
 					dbConnection.commit()
 			except:
@@ -437,8 +437,6 @@ class List(Resource):
 
 	def delete(self, userID, listID):
 		if 'Username' in session:
-			userID = request.json['userID']
-			listID = request.json['listID']
 			try:
 				dbConnection = pymysql.connect(
 					settings.DB_HOST,

@@ -61,7 +61,7 @@
 						 I think it's struggling too to build the url with the unique id</p>
 
 						<input type="text" id="usID" placeholder="User ID"></input>
-						<button id="listsGet" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listsGet(usID.value)">Go!</button>
+						<button id="listsGet" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listsGet(usID.value)">Go!</button></br>
 
 						<p>Add another list: </p></br>
 						<input type="text" id="usIDIn" placeholder="User ID"></input></br>
@@ -72,14 +72,20 @@
 						<div id="app">
 							<ul id="app">
 								<li v-for="list in lists">
-										{{list}}</br>
-										<input type="text" id="listNewName" placeholder="leave empty if you don't want to change name"></input></br>
-										<input type="text" id="listNewDesc" placeholder="leave empty if you don't want to change description"></input></br>
-										<button id="listPut" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listPut()">Edit list</button></br>
-										<button id="deleteList" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listDelete()">Delete list</button>
+										<h3>{{list.Title}}</h3>
+										{{list.Description}}</br>
 									</br>
 								</li>
 							</ul>
+							<h2>Need to edit or delete something?</h2>
+							<input type="text" id= "listUID" placeholder = 'UserID of list' required=true></input>
+							<input type="text" id= "listLID" placeholder = 'List ID' required=true></input>
+							<input type="text" id="listNewName" placeholder="leave empty if you don't want to change name"></input>
+							<input type="text" id="listNewDesc" placeholder="leave empty if you don't want to change description"></input></br>
+							<button id="listPut" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listPut()">Edit list</button></br>
+							<p>(To delete, ensure that the user and list ID has been added)</p></br>
+							<button id="deleteList" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="listDelete()">Delete list</button>
+
 						</div>
 
 						<h1>Specific List:</h1></br>
