@@ -516,7 +516,6 @@ class Tasks(Resource):
 			return make_response(jsonify({ "status": "Who are you?"}), 401)
 
 	def get(self, userID, listID):
-		listID = request.json['listID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,

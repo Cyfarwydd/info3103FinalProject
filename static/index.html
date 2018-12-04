@@ -98,7 +98,8 @@
 						<input type="text" id="taskName" placeholder="New task's name"></input></br>
 						<input type="text" id="taskListID" placeholder="What list# does it belong to?"></input></br>
 						<input type="text" id="taskUserID" placeholder="What User ID does it belong to?"></input></br>
-						<button id="postTask" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="tasksPost()">Add Task</button></br>
+						<button id="postTask" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="tasksPost(taskUserID.value, taskListID.value, taskName.value)">Add Task</button></br>
+						<button id="getTasks" class="btn btn-lg btn-primary btn-block" type="button" v-on:click="tasksGet(taskUserID.value, taskListID.value)">Get Tasks</button></br>
 
 						<div id="app">
 							<ul id="app">

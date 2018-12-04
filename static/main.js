@@ -312,7 +312,8 @@ var app=new Vue({
       url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks'
       axios.get(url, postData, axiosConfig)
         .then((res) => {
-          this.list.tasks=stringify(res.data);
+          console.log(res.data)
+          this.tasks = res.data.Tasks;
         })
         .catch((err) => {
           app.addedSch= err;
