@@ -3,8 +3,12 @@ var app=new Vue({
   data() {
   	return {
       url: window.location.href,
+      userID: '',
       users:  '',
       lists: '',
+      list: '',
+      listName: '',
+      listDesc: '',
       tasks: '',
       authenticated: false,
       status: '',
@@ -18,11 +22,6 @@ var app=new Vue({
   	}
   },
 
-
-
-  mounted: function () {
-    this.url = window.location.href
-  },
 
 
   methods:{
@@ -71,7 +70,8 @@ var app=new Vue({
           console.log(res.data)
           this.url = res.data;
           console.log("Logged In");
-          console.log(this.url);
+          console.log(res.data.uri);
+          this.userID = res.data.UserID
 
         })
         .catch((err) => {
@@ -86,7 +86,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca' + location.port + '/signin'
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/signin'
       axios.get(url, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
@@ -210,10 +210,6 @@ var app=new Vue({
     },//listsPost
 
     listGet : function (userID, listID){
-      var postData = {
-        'userID': userID,
-        'listID': listID
-        };
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -221,9 +217,10 @@ var app=new Vue({
           }
       };
       url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID
-      axios.get(url, postData, axiosConfig)
+      axios.get(url, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          console.log(res.data.list)
+          this.list=res.data.list;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -278,9 +275,9 @@ var app=new Vue({
 
     tasksPost : function (userID, listID, task){
       var postData = {
-        userID: userID,
-        listID: listID,
-        task: task
+        'userID': document.getElementById('taskUserID').value,
+        'listID': document.getElementById('taskListID').value,
+        'task': document.getElementById('taskName').value
         };
       let axiosConfig = {
           headers: {
@@ -288,10 +285,11 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks'
+      console.log(postData)
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists/' + postData.listID + '/tasks'
       axios.post(url, postData, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          this.tasks=res.data;
         })
         .catch((err) => {
           app.addedSch= err;
@@ -310,9 +308,10 @@ var app=new Vue({
           }
       };
       url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks'
+      console.log(url)
       axios.get(url, postData, axiosConfig)
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data.Tasks)
           this.tasks = res.data.Tasks;
         })
         .catch((err) => {

@@ -140,8 +140,34 @@ class SignIn(Resource):
 
 		#if they are logged in...
 		if 'Username' in session:
-			response= {'status': 'success'}
-			responseCode = 200
+			try:
+				dbConnection = pymysql.connect(
+					settings.DB_HOST,
+					settings.DB_USER,
+					settings.DB_PASSWD,
+					settings.DB_DATABASE,
+					charset='utf8mb4',
+					cursorclass=pymysql.cursors.DictCursor)
+				sql = 'getUserByName'
+				Username = request.json['Username'];
+				sqlArgs = (Username,)
+				cursor = dbConnection.cursor()
+				cursor.callproc(sql, sqlArgs)
+				row = cursor.fetchone()
+				if row is None:
+					response = {'status': 'Username does not exist'}
+					responseCode = 400
+					return make_response(jsonify(response), responseCode)
+				else:
+					uri = 'https://'+settings.APP_HOST+":"+str(settings.APP_PORT)
+					uri = uri+'users/'+str(row["UserID"])
+					return make_response(jsonify({"uri":uri, "UserID": row['UserID']}), 201)
+			except:
+				response = {'status': 'Fail'}
+				responseCode = 500
+			finally:
+				cursor.close()
+				dbConnection.close()
 			return make_response(jsonify(response), responseCode)
 		else:
 			try:
@@ -366,8 +392,6 @@ class Lists(Resource):
 
 class List(Resource):
 	def get(self, userID, listID):
-		userID = request.json['userID']
-		listID = request.json['listID']
 		try:
 			dbConnection = pymysql.connect(
 				settings.DB_HOST,
