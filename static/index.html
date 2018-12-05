@@ -214,11 +214,11 @@
 									<table class = "table table-responsive">
 										<ul id="app">
 											<tr v-for="task in tasks">
-												<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', False)" checked></input></th>
-												<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID ,'', True)"></input></th>
+												<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', false)" checked></input></th>
+												<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', true)"></input></th>
 												<th>{{task.Task}}</th></br>
 												<input type="text" id="taskPutTitle" placeholder="Change task name"></input></br>
-												<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut(task.TaskID, taskPutTitle.value, '')">Edit task</button>
+												<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut(task.TaskID, taskPutTitle.value, task.Complete)">Edit task</button>
 												<button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete(task.TaskID)">Delete task</button></br>
 											</tr>
 										</ul>

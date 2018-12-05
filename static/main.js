@@ -334,7 +334,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks' + taskID
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID
       axios.get(url, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
@@ -345,10 +345,17 @@ var app=new Vue({
     },//taskGet
 
     taskPut : function (taskID, taskIn, bool){
+      let x = 0;
+      console.log(bool);
+      console.log(x);
+      console.log(this.x);
+      if(bool === true){
+        x = 1;
+      }
       var postData = {
         taskID: taskID,
         taskIn: taskIn,
-        bool: bool
+        bool: x
         };
       let axiosConfig = {
           headers: {
@@ -356,10 +363,11 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + this.userID + '/lists/' + this.listLID + '/tasks' + taskID
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + this.userID + '/lists/' + this.listLID + '/tasks/' + taskID
       axios.put(url, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
+          this.tasksGet(this.userID,this.listLID);
         })
         .catch((err) => {
           app.addedSch= err;

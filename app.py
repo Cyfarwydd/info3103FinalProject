@@ -598,9 +598,6 @@ class Task(Resource):
 		if 'Username' in session:
 			if not request.json:
 				abort(400)
-			userID = request.json['userID']
-			listID = request.json['listID']
-			taskID = request.json['taskID']
 			taskIn = request.json['taskIn']
 			bool = request.json['bool']
 			try:
@@ -626,12 +623,11 @@ class Task(Resource):
 					sqlArgs = (userID,listID, taskID, taskIn)
 					cursor.callproc(sql, sqlArgs)
 					dbConnection.commit()
-				if bool != "":
-					sql = 'updateTaskCompleteness'
-					cursor = dbConnection.cursor()
-					sqlArgs = (userID, listID, taskID, bool)
-					cursor.callproc(sql, sqlArgs)
-					dbConnection.commit()
+				sql = 'updateTaskCompleteness'
+				cursor = dbConnection.cursor()
+				sqlArgs = (userID, listID, taskID, bool)
+				cursor.callproc(sql, sqlArgs)
+				dbConnection.commit()
 			except:
 				abort(503)
 			finally:
