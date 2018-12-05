@@ -9,6 +9,9 @@ var app=new Vue({
       lists: '',
       tasks: '',
       authenticated: false,
+      listBool: false,
+      listUID: '',
+      listLID: '',
       status: '',
       username: '',
       password: '',
@@ -218,6 +221,10 @@ var app=new Vue({
         .then((res) => {
           console.log(res.data.list)
           this.list=res.data.list;
+          this.listBool = true;
+          this.listLID = res.data.list.ListID;
+          this.listUID = res.data.list.UserID;
+          this.tasksGet(userID,listID);
         })
         .catch((err) => {
           app.addedSch= err;

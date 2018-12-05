@@ -208,6 +208,24 @@
 						<th>{{list.Description}}</th></br>
 					</br>
 
+						<div v-if = 'listBool === true'>
+							<div v-if = 'listUID === userID'>
+						</div>
+						<div v-if = 'listUID !== userID'>
+							<div id="app">
+								<table class = "table table-responsive">
+								<ul id="app">
+									<tr v-for="task in tasks">
+										<th v-if="task.Complete==true"><input type="checkbox" disabled = "disabled" class="taskDone" v-on:click="taskPut()" checked></input></th>
+										<th v-if="task.Complete==false"><input type="checkbox" disabled = "disabled" class="taskDone" v-on:click="taskPut()"></input></th>
+										<th>{{task.Task}}</th></br>
+									</tr>
+								</ul>
+							</table>
+							</div>
+					</div>
+					</div>
+					<!--
 						<p>Add a task?</p></br>
 						<table type="table-responsive">
 							<tr>
@@ -239,7 +257,7 @@
 						</table>
 						</div>
 
-
+					-->
 
 					</div>
 			</div>
