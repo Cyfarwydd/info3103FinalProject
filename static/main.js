@@ -5,10 +5,8 @@ var app=new Vue({
       url: window.location.href,
       userID: '',
       users:  '',
-      lists: '',
       list: '',
-      listName: '',
-      listDesc: '',
+      lists: '',
       tasks: '',
       authenticated: false,
       status: '',
@@ -146,7 +144,7 @@ var app=new Vue({
 
     userDelete : function (userID){
       var postData = {
-        userID: userID,
+        userID: this.userID,
         };
       let axiosConfig = {
           headers: {
@@ -154,7 +152,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID
       axios.delete(url, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
@@ -178,7 +176,6 @@ var app=new Vue({
       url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists'
       axios.get(url, postData, axiosConfig)
         .then((res) => {
-          console.log(res.data.lists)
           this.lists=res.data.lists;
         })
         .catch((err) => {
@@ -186,9 +183,9 @@ var app=new Vue({
       });
     },//listsGet
 
-    listsPost : function (userIDIn, titleIn, descrIn){
+    listsPost : function ( titleIn, descrIn){
       var postData = {
-        userID: userIDIn,
+        userID: this.userID,
         title: titleIn,
         descr: descrIn
         };
@@ -202,7 +199,7 @@ var app=new Vue({
       url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists'
       axios.post(url, postData, axiosConfig)
         .then((res) => {
-          app.addedSch=res.data;
+          this.list=res.data;
         })
         .catch((err) => {
           app.addedSch= err;

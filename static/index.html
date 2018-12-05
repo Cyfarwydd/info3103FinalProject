@@ -94,7 +94,7 @@
 								<div class="panel-heading">Users:</div>
 								<div class="panel-body">
 
-								<button id="getUsers" class="btn btn-sm btn-primary  " type="button" v-on:click="usersGet()">Get Users</button>
+								<button id="getUsers" class="btn btn-sm btn-primary" type="button" v-on:click="usersGet()">Get Users</button>
 						<table class = "table table-responsive table-striped">
 						<ul id="app">
 								<tr v-for="user in users">
@@ -105,7 +105,7 @@
 
 								</thread>
 					</table>
-					<button id="deleteUser" class="btn btn-sm btn-primary  " type="button" v-on:click="userDelete()">Delete user</button>
+					<button id="deleteUser" class="btn btn-sm btn-primary" type="button" v-on:click="userDelete()">Delete user</button>
 					</div>
 				</div>
 			</div>
@@ -125,11 +125,8 @@
 						<p>Add another list: </p></br>
 						<table type="table-responsive">
 							<tr>
-								<th><input type="text" id="usIDIn" placeholder="User ID" required></input></th>
-							</tr>
-							<tr>
 								<th><input type="text" id="listName" placeholder="name of list" required></input></th>
-								<th><button id="listsPost" class="btn btn-sm btn-primary  " type="button" v-on:click="listsPost(usIDIn.value, listName.value, listDesc.value)">Post List</button></th>
+								<th><button id="listsPost" class="btn btn-sm btn-primary" type="button" v-on:click="listsPost(listName.value, listDesc.value)">Post List</button></th>
 							</tr>
 							<tr>
 								<th><input type="text" id="listDesc" placeholder="list description"></input></th>
@@ -147,7 +144,8 @@
 									</br>
 								</tr>
 							</ul>
-							</table>
+						</table>
+
 							<h2>Need to edit or delete something?</h2>
 							<table type="table-responsive">
 								<tr>
@@ -179,6 +177,22 @@
 				</div>
 			</div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<div class="container" id="ListContainer">
 			<div class="panel panel-default">
 				<div class="panel-heading">Full List:</div>
 				<div class="panel-body">
@@ -217,7 +231,7 @@
 									<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut()" checked></input></th>
 									<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut()"></input></th>
 									<th>{{task.Task}}</th></br>
-										<input type="text" id="taskPutTitle" placeholder="Leave empty if you don't want to change task name"></input></br>
+										<input type="text" id="taskPutTitle" placeholder="Change task name"></input></br>
 										<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut()">Edit task</button>
 										<button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete()">Delete task</button></br>
 								</tr>
@@ -229,7 +243,7 @@
 
 					</div>
 			</div>
-
+</div>
 			</div>
 
 
