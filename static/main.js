@@ -374,22 +374,18 @@ var app=new Vue({
       });
     },//taskPut
 
-    taskDelete : function (userID, listID, taskID){
-      var postData = {
-        userID: userID,
-        listID: listID,
-        taskID: taskID,
-        };
+    taskDelete : function (taskID){
       let axiosConfig = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks/' + taskID
-      axios.delete(url, postData, axiosConfig)
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + this.userID + '/lists/' + this.listLID + '/tasks/' + taskID
+      axios.delete(url, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;
+          this.tasksGet(this.userID,this.listLID);
         })
         .catch((err) => {
           app.addedSch= err;

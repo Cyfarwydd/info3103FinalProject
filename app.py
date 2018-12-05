@@ -639,11 +639,6 @@ class Task(Resource):
 
 	def delete(self, userID, listID, taskID):
 		if 'Username' in session:
-			if not request.json:
-				abort(400)
-			userID = request.json['userID']
-			taskID = request.json['taskID']
-			listID = request.json['listID']
 			try:
 				dbConnection = pymysql.connect(
 					settings.DB_HOST,
