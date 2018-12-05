@@ -277,11 +277,9 @@ var app=new Vue({
       });
     },//listDelete
 
-    tasksPost : function (userID, listID, task){
+    tasksPost : function (task){
       var postData = {
-        'userID': document.getElementById('taskUserID').value,
-        'listID': document.getElementById('taskListID').value,
-        'task': document.getElementById('taskName').value
+        'task': task
         };
       let axiosConfig = {
           headers: {
@@ -290,10 +288,11 @@ var app=new Vue({
           }
       };
       console.log(postData)
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + postData.userID + '/lists/' + postData.listID + '/tasks'
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + this.userID + '/lists/' + this.listLID + '/tasks'
       axios.post(url, postData, axiosConfig)
         .then((res) => {
-          this.tasks=res.data;
+          this.status = res.data;
+          this.tasksGet(this.userID,this.listLID);
         })
         .catch((err) => {
           app.addedSch= err;
@@ -345,10 +344,8 @@ var app=new Vue({
       });
     },//taskGet
 
-    taskPut : function (userID, listID, taskID, taskIn, bool){
+    taskPut : function (taskID, taskIn, bool){
       var postData = {
-        userID: userID,
-        listID: listID,
         taskID: taskID,
         taskIn: taskIn,
         bool: bool
@@ -359,7 +356,7 @@ var app=new Vue({
               "Access-Control-Allow-Origin": "*",
           }
       };
-      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + userID + '/lists/' + listID + '/tasks' + taskID
+      url = 'https://info3103.cs.unb.ca:' + location.port + '/users/' + this.userID + '/lists/' + this.listLID + '/tasks' + taskID
       axios.put(url, postData, axiosConfig)
         .then((res) => {
           app.addedSch=res.data;

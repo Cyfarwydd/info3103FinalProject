@@ -203,27 +203,45 @@
 						<input type="text" id="useridagain" placeholder="User ID" required></input>
 						<input type="text" id="liID" placeholder="List ID" required></input>
 						<button id="listGet" class="btn btn-sm btn-primary  " type="button" v-on:click="listGet(useridagain.value, liID.value)">Go!</button></br>
-						<th>{{list.ListID}}</th></br>
 						<th>{{list.Title}}</th></br>
 						<th>{{list.Description}}</th></br>
 					</br>
 
 						<div v-if = 'listBool === true'>
+
 							<div v-if = 'listUID === userID'>
-						</div>
-						<div v-if = 'listUID !== userID'>
+								<div id="app">
+									<table class = "table table-responsive">
+										<ul id="app">
+											<tr v-for="task in tasks">
+												<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', False)" checked></input></th>
+												<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID ,'', True)"></input></th>
+												<th>{{task.Task}}</th></br>
+												<input type="text" id="taskPutTitle" placeholder="Change task name"></input></br>
+												<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut(task.TaskID, taskPutTitle.value, '')">Edit task</button>
+												<button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete(task.TaskID)">Delete task</button></br>
+											</tr>
+										</ul>
+										<p>Add a task?</p></br>
+										<th><input type="text" id="taskInfoIn" placeholder="Task"></input></th>
+										<th><button id="postTask" class="btn btn-sm btn-primary  " type="button" v-on:click="tasksPost(taskInfoIn.value)">Add Task</button></th>
+									</table>
+								</div>
+
+							</div>
+							<div v-if = 'listUID !== userID'>
 							<div id="app">
 								<table class = "table table-responsive">
-								<ul id="app">
-									<tr v-for="task in tasks">
-										<th v-if="task.Complete==true"><input type="checkbox" disabled = "disabled" class="taskDone" v-on:click="taskPut()" checked></input></th>
-										<th v-if="task.Complete==false"><input type="checkbox" disabled = "disabled" class="taskDone" v-on:click="taskPut()"></input></th>
-										<th>{{task.Task}}</th></br>
-									</tr>
-								</ul>
-							</table>
+									<ul id="app">
+										<tr v-for="task in tasks">
+											<th v-if="task.Complete==true"><input type="checkbox" disabled = "disabled" class="taskDone" checked></input></th>
+											<th v-if="task.Complete==false"><input type="checkbox" disabled = "disabled" class="taskDone"></input></th>
+											<th>{{task.Task}}</th></br>
+										</tr>
+									</ul>
+								</table>
 							</div>
-					</div>
+						</div>
 					</div>
 					<!--
 						<p>Add a task?</p></br>

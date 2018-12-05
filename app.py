@@ -497,8 +497,6 @@ class Tasks(Resource):
 		if 'Username' in session:
 			if not request.json:
 				abort(400)
-			userID = request.json['userID']
-			listID = request.json['listID']
 			task = request.json['task']
 			try:
 				dbConnection = pymysql.connect(settings.DB_HOST,
